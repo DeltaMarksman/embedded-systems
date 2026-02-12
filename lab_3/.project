@@ -24,4 +24,11 @@
 		<nature>org.eclipse.cdt.core.ccnature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>msp430.ccxml</name>
+			<type>1</type>
+			<location>C:/Users/da949990/ti/CCSTargetConfigurations/msp430.ccxml</location>
+		</link>
+	</linkedResources>
 </projectDescription>
