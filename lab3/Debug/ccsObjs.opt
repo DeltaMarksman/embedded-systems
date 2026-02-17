@@ -1,0 +1,17 @@
+"./GUIComm_JSON.obj"
+"./callbacks_JSON.obj"
+"./main.obj"
+"./src/MSP430_GUI/GUI_JSON.obj"
+"./src/MSP430_GUI/jsmn/jsmn.obj"
+"../lnk_msp430fr6989.cmd"
+"../src/IQMathLib/CCS/MPY32/5xx_6xx/IQmathLib_CCS_MPY32_5xx_6xx_CPUX_large_code_large_data.lib"
+"../src/IQMathLib/CCS/MPY32/5xx_6xx/IQmathLib_CCS_MPY32_5xx_6xx_CPUX_large_code_restricted_data.lib"
+"../src/IQMathLib/CCS/MPY32/5xx_6xx/IQmathLib_CCS_MPY32_5xx_6xx_CPUX_large_code_small_data.lib"
+"../src/IQMathLib/CCS/MPY32/5xx_6xx/IQmathLib_CCS_MPY32_5xx_6xx_CPUX_small_code_small_data.lib"
+"../src/IQMathLib/CCS/MPY32/5xx_6xx/QmathLib_CCS_MPY32_5xx_6xx_CPUX_large_code_large_data.lib"
+"../src/IQMathLib/CCS/MPY32/5xx_6xx/QmathLib_CCS_MPY32_5xx_6xx_CPUX_large_code_restricted_data.lib"
+"../src/IQMathLib/CCS/MPY32/5xx_6xx/QmathLib_CCS_MPY32_5xx_6xx_CPUX_large_code_small_data.lib"
+"../src/IQMathLib/CCS/MPY32/5xx_6xx/QmathLib_CCS_MPY32_5xx_6xx_CPUX_small_code_small_data.lib"
+-llibmpu_init.a
+-llibmath.a
+-llibc.a
