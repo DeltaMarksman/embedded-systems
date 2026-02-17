@@ -1,7 +1,7 @@
 ******************************************************************************
                   MSP430 Linker Unix v21.6.1                   
 ******************************************************************************
->> Linked Mon Feb 16 23:46:40 2026
+>> Linked Tue Feb 17 00:10:11 2026
 
 OUTPUT FILE NAME:   <lab3.out>
 ENTRY POINT SYMBOL: "_c_int00_noinit_noargs_mpu"  address: 00004400
@@ -79,7 +79,7 @@ MEMORY CONFIGURATION
   INT53                 0000fffa   00000002  00000002  00000000  RWIX
   INT54                 0000fffc   00000002  00000002  00000000  RWIX
   RESET                 0000fffe   00000002  00000002  00000000  RWIX
-  FRAM2                 00010000   00013ff8  00000090  00013f68  RWIX
+  FRAM2                 00010000   00013ff8  00000096  00013f62  RWIX
 
 
 SECTION ALLOCATION MAP
@@ -230,20 +230,20 @@ SYSNMI     0    0000fffc    00000002
 .reset     0    0000fffe    00000002     
                   0000fffe    00000002     rts430x_lc_rd_eabi.lib : boot.c.obj (.reset)
 
-.text      0    00010000    00000090     
-                  00010000    0000005a     main.obj (.text:main)
-                  0001005a    0000002c     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
-                  00010086    00000006     rts430x_lc_rd_eabi.lib : exit.c.obj (.text:abort)
-                  0001008c    00000004                            : pre_init.c.obj (.text:_system_pre_init)
+.text      0    00010000    00000096     
+                  00010000    00000060     main.obj (.text:main)
+                  00010060    0000002c     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
+                  0001008c    00000006     rts430x_lc_rd_eabi.lib : exit.c.obj (.text:abort)
+                  00010092    00000004                            : pre_init.c.obj (.text:_system_pre_init)
 
 MODULE SUMMARY
 
        Module             code   ro data   rw data
        ------             ----   -------   -------
     ./
-       main.obj           90     0         0      
+       main.obj           96     0         0      
     +--+------------------+------+---------+---------+
-       Total:             90     0         0      
+       Total:             96     0         0      
                                                   
     /Applications/ti/ccs2041/ccs/ccs_base/msp430/lib/FR59xx/MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib
        mpu_init.o         44     0         0      
@@ -288,7 +288,7 @@ MODULE SUMMARY
                                                   
        Stack:             0      0         160    
     +--+------------------+------+---------+---------+
-       Grand Total:       176    58        160    
+       Grand Total:       182    58        160    
 
 
 GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
@@ -552,7 +552,7 @@ address   name
 000009ce  AESAXIN_L                 
 000004be  BCD2BIN                   
 000004bc  BIN2BCD                   
-00010086  C$$EXIT                   
+0001008c  C$$EXIT                   
 0000043e  CAPTIO0CTL                
 0000043f  CAPTIO0CTL_H              
 0000043e  CAPTIO0CTL_L              
@@ -1711,12 +1711,12 @@ ffffffff  __TI_prof_data_size
 ffffffff  __TI_prof_data_start      
 ffffffff  __c_args__                
 00000001  __mpu_enable              
-0001005a  __mpu_init                
+00010060  __mpu_init                
 00004400  _c_int00_noinit_noargs_mpu
 0000fffe  _reset_vector             
 00002360  _stack                    
-0001008c  _system_pre_init          
-00010086  abort                     
+00010092  _system_pre_init          
+0001008c  abort                     
 00004400  fram_ipe_end              
 00004400  fram_ipe_start            
 00004400  fram_rw_start             
@@ -3155,10 +3155,10 @@ address   name
 0000fffc  __TI_int54                
 0000fffe  _reset_vector             
 00010000  main                      
-0001005a  __mpu_init                
-00010086  C$$EXIT                   
-00010086  abort                     
-0001008c  _system_pre_init          
+00010060  __mpu_init                
+0001008c  C$$EXIT                   
+0001008c  abort                     
+00010092  _system_pre_init          
 ffffffff  __TI_pprof_out_hndl       
 ffffffff  __TI_prof_data_size       
 ffffffff  __TI_prof_data_start      
