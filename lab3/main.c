@@ -35,6 +35,20 @@ int button_is_pressed(int button) {
     return (P1IN & button) == 0;
 }
 
+void red_led(int value) {
+    if (value == 1) 
+        P1OUT |= redLED;
+    else 
+        P1OUT &= ~redLED;
+}
+
+void green_led(int value) {
+    if (value == 1) 
+        P9OUT |= greenLED;
+    else 
+        P9OUT &= ~greenLED;
+}
+
 /**
  * main.c
  */
@@ -72,10 +86,57 @@ void main(void) {
     // Ensure flag is cleared at the start
     TA0CTL &= ~TAIFG;
 
+    int error = 0;
+
     // Infinite loop
     for(;;) {
-        if (button_is_pressed(BUT2)) {
-            P1OUT |= redLED;
+        // Check if in error
+        if (error == 1) {
+            if (!button_is_pressed(BUT2))
+                continue;
+
+            TA0CTL &= ~TAIFG;
+            TA0CTL |= TACLR;
+            green_led(0);
+            error = 0;
+        }
+            
+
+        // Detect when the button is pressed.
+        if (button_is_pressed(BUT1)) {
+            // Turn on the timer and clear the timer
+            TA0CTL = (TA0CTL & ~MC_3) | TACLR | MC_2;
+
+            // Begin while to determine when the button is released
+            while (button_is_pressed(BUT1)) {
+                // if the timer overflows, enter error state
+                if ((TA0CTL & TAIFG) == TAIFG) {
+                    error = 1;
+                    break;
+                }
+            }
+
+            // Check if errored
+            if (error == 1) {
+                green_led(1);
+                continue;
+            }
+
+            // After button is released, put the timer in up, store the current value in the upto value and reset
+            TA0CTL = (TA0CTL & ~MC_3) | MC_1;
+            TA0CCR0 = TA0R;
+            TA0CTL |= TACLR;
+            TA0CTL &= ~TAIFG;
+
+            // Turn on the LED until the flag is turned on
+            red_led(1);
+            while( (TA0CTL & TAIFG) == 0 ) {}
+            red_led(0);
+
+            // turn off the timer and clear the flag
+            TA0CTL = (TA0CTL & ~MC_3) | MC_0;
+            TA0CTL &= ~TAIFG;
+            
         }
     }
 }
