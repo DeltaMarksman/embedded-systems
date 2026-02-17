@@ -2,6 +2,9 @@
 #include <msp430fr6989.h>
 #define redLED BIT0 // Red LED at P1.0
 #define greenLED BIT7 // Green LED at P9.7
+#define BUT1 BIT1 // Button S1 at P1.1
+#define BUT2 BIT2 // Button S2 at P1.2
+
 
 
 //**********************************
@@ -26,6 +29,12 @@ void config_ACLK_to_32KHz_crystal() {
     return;
 }
 
+
+// Helper functions
+int button_is_pressed(int button) {
+    return (P1IN & button) == 0;
+}
+
 /**
  * main.c
  */
@@ -38,6 +47,22 @@ void main(void) {
     // Configure the LEDs as output
     P1DIR |= redLED;
     P9DIR |= greenLED;
+
+    // Turn off the LEDs
+    P1OUT &= ~redLED; // Turn LED Off
+    P9OUT &= ~greenLED; // Turn LED Off
+
+
+    // Configure buttons
+    P1DIR &= ~BUT1; // Direct pin as input
+    P1REN |= BUT1;  // Enable built-in resistor
+    P1OUT |= BUT1; // Set resistor as pull-up
+
+    P1DIR &= ~BUT2; // Direct pin as input
+    P1REN |= BUT2;  // Enable built-in resistor
+    P1OUT |= BUT2; // Set resistor as pull-up
+
+
     // Configure ACLK to the 32 KHz crystal (function call)
     config_ACLK_to_32KHz_crystal();
     // Configure Timer_A
@@ -49,13 +74,8 @@ void main(void) {
 
     // Infinite loop
     for(;;) {
-    // Wait in this empty loop for the flag to raise
-        while( (TA0CTL & TAIFG) == 0 ) {}
-            // Do the action here
-            P1OUT ^= redLED;
-            P1OUT ^= greenLED;
-
-            // Reset Flag
-            TA0CTL &= ~TAIFG;
+        if (button_is_pressed(BUT2)) {
+            P1OUT |= redLED;
+        }
     }
 }
