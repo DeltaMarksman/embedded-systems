@@ -29,9 +29,30 @@ void config_ACLK_to_32KHz_crystal() {
 /**
  * main.c
  */
-int main(void)
-{
-	WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
-	
-	return 0;
+void main(void) {
+
+	WDTCTL = WDTPW | WDTHOLD; // Stop the Watchdog timer
+    PM5CTL0 &= ~LOCKLPM5; // Disable GPIO power-on default high-impedance mode
+
+
+	// Configure the LEDs as output
+	P1DIR |= redLED;
+	P9DIR |= greenLED;
+	// Configure ACLK to the 32 KHz crystal (function call)
+	config_ACLK_to_32KHz_crystal();
+	// Configure Timer_A
+	// Use ACLK, divide by 1, continuous mode, clear TAR
+	TA0CTL = TASSEL_1 | ID_0 | MC_2 | TACLR;
+
+	// Ensure flag is cleared at the start
+	TA0CTL &= ˜TAIFG;
+
+	// Infinite loop
+	for(;;) {
+	// Wait in this empty loop for the flag to raise
+		while( TA0CTL & TAIFG == TAIFG ) {}
+			// Do the action here
+			P1DIR ^= redLED;
+			P9DIR ^= greenLED;
+	}
 }
