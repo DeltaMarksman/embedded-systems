@@ -1,11 +1,7 @@
 ******************************************************************************
                   MSP430 Linker Unix v21.6.1                   
 ******************************************************************************
-<<<<<<< Updated upstream
->> Linked Mon Feb 16 23:46:40 2026
-=======
->> Linked Tue Feb 17 00:37:01 2026
->>>>>>> Stashed changes
+>> Linked Tue Feb 17 02:04:41 2026
 
 OUTPUT FILE NAME:   <lab3.out>
 ENTRY POINT SYMBOL: "_c_int00_noinit_noargs_mpu"  address: 00004400
@@ -83,11 +79,7 @@ MEMORY CONFIGURATION
   INT53                 0000fffa   00000002  00000002  00000000  RWIX
   INT54                 0000fffc   00000002  00000002  00000000  RWIX
   RESET                 0000fffe   00000002  00000002  00000000  RWIX
-<<<<<<< Updated upstream
-  FRAM2                 00010000   00013ff8  00000090  00013f68  RWIX
-=======
-  FRAM2                 00010000   00013ff8  000000ae  00013f4a  RWIX
->>>>>>> Stashed changes
+  FRAM2                 00010000   00013ff8  00000120  00013ed8  RWIX
 
 
 SECTION ALLOCATION MAP
@@ -238,34 +230,20 @@ SYSNMI     0    0000fffc    00000002
 .reset     0    0000fffe    00000002     
                   0000fffe    00000002     rts430x_lc_rd_eabi.lib : boot.c.obj (.reset)
 
-<<<<<<< Updated upstream
-.text      0    00010000    00000090     
-                  00010000    0000005a     main.obj (.text:main)
-                  0001005a    0000002c     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
-                  00010086    00000006     rts430x_lc_rd_eabi.lib : exit.c.obj (.text:abort)
-                  0001008c    00000004                            : pre_init.c.obj (.text:_system_pre_init)
-=======
-.text      0    00010000    000000ae     
-                  00010000    00000078     main.obj (.text:main)
-                  00010078    0000002c     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
-                  000100a4    00000006     rts430x_lc_rd_eabi.lib : exit.c.obj (.text:abort)
-                  000100aa    00000004                            : pre_init.c.obj (.text:_system_pre_init)
->>>>>>> Stashed changes
+.text      0    00010000    00000120     
+                  00010000    000000ea     main.obj (.text:main)
+                  000100ea    0000002c     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
+                  00010116    00000006     rts430x_lc_rd_eabi.lib : exit.c.obj (.text:abort)
+                  0001011c    00000004                            : pre_init.c.obj (.text:_system_pre_init)
 
 MODULE SUMMARY
 
        Module             code   ro data   rw data
        ------             ----   -------   -------
     ./
-<<<<<<< Updated upstream
-       main.obj           90     0         0      
+       main.obj           234    0         0      
     +--+------------------+------+---------+---------+
-       Total:             90     0         0      
-=======
-       main.obj           120    0         0      
-    +--+------------------+------+---------+---------+
-       Total:             120    0         0      
->>>>>>> Stashed changes
+       Total:             234    0         0      
                                                   
     /Applications/ti/ccs2041/ccs/ccs_base/msp430/lib/FR59xx/MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib
        mpu_init.o         44     0         0      
@@ -310,11 +288,7 @@ MODULE SUMMARY
                                                   
        Stack:             0      0         160    
     +--+------------------+------+---------+---------+
-<<<<<<< Updated upstream
-       Grand Total:       176    58        160    
-=======
-       Grand Total:       206    58        160    
->>>>>>> Stashed changes
+       Grand Total:       320    58        160    
 
 
 GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
@@ -578,11 +552,7 @@ address   name
 000009ce  AESAXIN_L                 
 000004be  BCD2BIN                   
 000004bc  BIN2BCD                   
-<<<<<<< Updated upstream
-00010086  C$$EXIT                   
-=======
-000100a4  C$$EXIT                   
->>>>>>> Stashed changes
+00010116  C$$EXIT                   
 0000043e  CAPTIO0CTL                
 0000043f  CAPTIO0CTL_H              
 0000043e  CAPTIO0CTL_L              
@@ -1741,21 +1711,12 @@ ffffffff  __TI_prof_data_size
 ffffffff  __TI_prof_data_start      
 ffffffff  __c_args__                
 00000001  __mpu_enable              
-<<<<<<< Updated upstream
-0001005a  __mpu_init                
+000100ea  __mpu_init                
 00004400  _c_int00_noinit_noargs_mpu
 0000fffe  _reset_vector             
 00002360  _stack                    
-0001008c  _system_pre_init          
-00010086  abort                     
-=======
-00010078  __mpu_init                
-00004400  _c_int00_noinit_noargs_mpu
-0000fffe  _reset_vector             
-00002360  _stack                    
-000100aa  _system_pre_init          
-000100a4  abort                     
->>>>>>> Stashed changes
+0001011c  _system_pre_init          
+00010116  abort                     
 00004400  fram_ipe_end              
 00004400  fram_ipe_start            
 00004400  fram_rw_start             
@@ -3194,17 +3155,10 @@ address   name
 0000fffc  __TI_int54                
 0000fffe  _reset_vector             
 00010000  main                      
-<<<<<<< Updated upstream
-0001005a  __mpu_init                
-00010086  C$$EXIT                   
-00010086  abort                     
-0001008c  _system_pre_init          
-=======
-00010078  __mpu_init                
-000100a4  C$$EXIT                   
-000100a4  abort                     
-000100aa  _system_pre_init          
->>>>>>> Stashed changes
+000100ea  __mpu_init                
+00010116  C$$EXIT                   
+00010116  abort                     
+0001011c  _system_pre_init          
 ffffffff  __TI_pprof_out_hndl       
 ffffffff  __TI_prof_data_size       
 ffffffff  __TI_prof_data_start      
