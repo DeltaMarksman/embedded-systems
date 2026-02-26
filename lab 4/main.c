@@ -65,5 +65,4 @@ void main(void) {
 __interrupt void T0A0_ISR() {
     // Interrupt response goes here
     P1OUT ^= redLED; // toggle LED
-    TA0CTL &= ~TAIFG; // clear flag
 }
