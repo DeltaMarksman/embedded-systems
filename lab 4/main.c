@@ -6,12 +6,10 @@
 #define BUT2 BIT2 // Button S2 at Port 1.2
 
 // Speed timings
-#define NO_CORRECTION_NEEDED 500
-#define LOW_CORRECTION_NEEDED 250
-#define MEDIUM_CORRECTION_NEEDED 125
-#define HIGH_CORRECTION_NEEDED 62
-
-int position = 0;
+#define NO_CORRECTION_NEEDED        16384   //500ms
+#define LOW_CORRECTION_NEEDED       8192    //250ms
+#define MEDIUM_CORRECTION_NEEDED    4096    //125ms
+#define HIGH_CORRECTION_NEEDED      2048    //62.5ms
 
 void config_ACLK_to_32KHz_crystal() {
     // By default, ACLK runs on LFMODCLK at 5MHz/128 = 39 KHz
@@ -46,6 +44,19 @@ void main(void) {
     P1OUT &= ~redLED; // Turn LED Off
     P9OUT &= ~greenLED; // Turn LED Off
 
+
+    // Configure ACLK to the 32 KHz crystal
+    config_ACLK_to_32KHz_crystal();
+
+    // Configure Channel 0 for up mode with interrupts
+    TA0CCR0 = NO_CORRECTION_NEEDED; //@ 32KHz, 1 second = 2^16
+    TA0CCTL0 |= CCIE;
+    TA0CCTL0 &= ~CCIFG;
+
+    // Configure Timer_A
+    // Use ACLK, divide by 1, continuous mode, TAR cleared
+    TA0CTL = TASSEL_1 | ID_0 | MC_1 | TACLR ;
+
     // Configure the buttons for interrupts
     P1DIR &= ~(BUT1 | BUT2);        // 0: input
     P1REN |= (BUT1 | BUT2);         // 1: enable built-in resistors
@@ -62,18 +73,72 @@ void main(void) {
     for(;;) {}
 }
 
+// Delays
+const int delays[4] = {
+    NO_CORRECTION_NEEDED,
+    LOW_CORRECTION_NEEDED,
+    MEDIUM_CORRECTION_NEEDED,
+    HIGH_CORRECTION_NEEDED
+};
+
+int position = 0;
+
+void left_button_pressed() {
+    position = position <= -3 ? -3 : position -1;
+    TA0CCR0 = delays[abs(position)];
+}
+
+void right_button_pressed() {
+    position = position >= 3 ? 3 : position +1;
+    TA0CCR0 = delays[abs(position)];
+}
+
+
 //******* Writing the ISR *******
 #pragma vector = PORT1_VECTOR // Write the vector name
 __interrupt void Port1_ISR() {
+    _delay_cycles(100000);
     // Detect button 1 interrupt flag
     if ((P1IFG & BUT1) == BUT1) {
-        P1OUT ^= redLED;
         P1IFG &= ~BUT1;
+
+        left_button_pressed();
     }
 
     // Detect button 2 interrupt flag
     if ((P1IFG & BUT2) == BUT2) {
-        P9OUT ^= greenLED;
         P1IFG &= ~BUT2;
+
+        right_button_pressed();
     }
+}
+
+int light_on = 0;
+#pragma vector = TIMER0_A0_VECTOR // Link the ISR to the vector
+__interrupt void T0A0_ISR() {
+    // Interrupt response goes here
+    int green_led_active = position >= 0 ? 1 : 0;
+    int red_led_active = position <= 0 ? 1 : 0;
+
+    P1OUT ^= redLED; // toggle LED
+    P9OUT ^= greenLED; // toggle LED
+
+    // Turn off inactive lights
+    if (red_led_active)
+        if (light_on)
+            P1OUT |= redLED;
+        else
+            P1OUT &= ~redLED;
+    else
+        P1OUT &= ~redLED;
+
+    if (green_led_active)
+        if (light_on)
+            P9OUT |= greenLED;
+        else
+            P9OUT &= ~greenLED;
+    else
+        P9OUT &= ~greenLED;
+
+    light_on = !light_on;
 }
