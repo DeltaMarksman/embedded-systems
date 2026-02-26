@@ -1,0 +1,48 @@
+// Timer_A continuous mode, with interrupts, flashes LEDs
+#include <msp430fr6989.h>
+
+
+#define redLED BIT0 // Red LED at P1.0
+#define greenLED BIT7 // Green LED at P9.7
+
+
+void main(void) {
+
+    WDTCTL = WDTPW | WDTHOLD; // Stop the Watchdog timer
+    PM5CTL0 &= ˜LOCKLPM5; // Enable the GPIO pins
+
+
+    P1DIR |= redLED; // Configure pin as output
+    P9DIR |= greenLED; // Configure pin as output
+    P1OUT &= ˜redLED; // Turn LED Off
+    P9OUT &= ˜greenLED; // Turn LED Off
+
+
+    // Configure ACLK to the 32 KHz crystal
+    ...
+    // Configure Timer_A
+
+
+    // Use ACLK, divide by 1, continuous mode, TAR cleared, enable interrupt
+    for rollback-to-zero event
+    TA0CTL = ...
+
+
+    // Ensure the flag is cleared at the start
+    TA0CTL &= ˜TAIFG;
+
+
+    // Enable the global interrupt bit (call an intrinsic function)
+    ...
+
+
+    // Infinite loop... the code waits here between interrupts
+    for(;;) {}
+}
+
+    //******* Writing the ISR *******
+    #pragma vector = TIMER0_A1_VECTOR // Link the ISR to the vector
+    __interrupt void T0A1_ISR() {
+    // Interrupt response goes here
+    ...
+}

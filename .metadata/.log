@@ -449,3 +449,13 @@ org.jsoup.HttpStatusException: HTTP error fetching URL. Status=421, URL=https://
 
 !ENTRY org.eclipse.cdt.core 1 0 2026-02-26 01:13:30.013
 !MESSAGE Indexed 'lab 4' (1 sources, 5 headers) in 0.191 sec: 1,469 declarations; 2,007 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
+
+!ENTRY com.ti.ccstudio.debug 1 0 2026-02-26 01:29:03.815
+!MESSAGE DS_ERROR: MSP430: Error initializing emulator: A firmware update is required for the MSP430 Debug Interface (MSP-FET430UIF / MSP-FET / eZ-FET). Click the "Update" button to update the firmware and launch your debug session (this may require several update steps).  DO NOT UNPLUG THE INTERFACE DURING THE UPDATE.
+
+
+!ENTRY com.ti.ccstudio.debug 1 0 2026-02-26 01:29:03.967
+!MESSAGE DS_ERROR: Error initializing emulator:
+A firmware update is required for the MSP430 Debug Interface (MSP-FET430UIF / MSP-FET / eZ-FET). Click the "Update" button to update the firmware and launch your debug session (this may require several update steps).
+
+DO NOT UNPLUG THE INTERFACE DURING THE UPDATE.
