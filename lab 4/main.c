@@ -5,6 +5,13 @@
 #define BUT1 BIT1 // Button S1 at Port 1.1
 #define BUT2 BIT2 // Button S2 at Port 1.2
 
+// Speed timings
+#define NO_CORRECTION_NEEDED 500
+#define LOW_CORRECTION_NEEDED 250
+#define MEDIUM_CORRECTION_NEEDED 125
+#define HIGH_CORRECTION_NEEDED 62
+
+int position = 0;
 
 void config_ACLK_to_32KHz_crystal() {
     // By default, ACLK runs on LFMODCLK at 5MHz/128 = 39 KHz
@@ -59,13 +66,13 @@ void main(void) {
 #pragma vector = PORT1_VECTOR // Write the vector name
 __interrupt void Port1_ISR() {
     // Detect button 1 interrupt flag
-    if (P1IFG & BUT1) {
+    if ((P1IFG & BUT1) == BUT1) {
         P1OUT ^= redLED;
         P1IFG &= ~BUT1;
     }
 
     // Detect button 2 interrupt flag
-    if (P1IFG & BUT2) {
+    if ((P1IFG & BUT2) == BUT2) {
         P9OUT ^= greenLED;
         P1IFG &= ~BUT2;
     }
