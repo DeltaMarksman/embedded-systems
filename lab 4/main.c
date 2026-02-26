@@ -2,6 +2,8 @@
 #include <msp430fr6989.h>
 #define redLED BIT0 // Red LED at P1.0
 #define greenLED BIT7 // Green LED at P9.7
+#define BUT1 BIT1 // Button S1 at Port 1.1
+#define BUT2 BIT2 // Button S2 at Port 1.2
 
 
 void config_ACLK_to_32KHz_crystal() {
@@ -37,20 +39,13 @@ void main(void) {
     P1OUT &= ~redLED; // Turn LED Off
     P9OUT &= ~greenLED; // Turn LED Off
 
-
-    // Configure ACLK to the 32 KHz crystal
-    config_ACLK_to_32KHz_crystal();
-
-
-    // Configure Channel 0 for up mode with interrupts
-    TA0CCR0 = 32767; //@ 32KHz, 1 second = 2^16
-    TA0CCTL0 |= CCIE;
-    TA0CCTL0 &= ~CCIFG;
-
-    // Configure Timer_A
-    // Use ACLK, divide by 1, continuous mode, TAR cleared
-    TA0CTL = TASSEL_1 | ID_0 | MC_1 | TACLR ;
-
+    // Configure the buttons for interrupts
+    P1DIR &= ~(BUT1 | BUT2);        // 0: input
+    P1REN |= (BUT1 | BUT2);         // 1: enable built-in resistors
+    P1OUT |= (BUT1 | BUT2);         // 1: built-in resistor is pulled up to Vcc
+    P1IES |= (BUT1 | BUT2);         // 1: interrupt on falling edge (0 for rising edge)
+    P1IFG &= ~(BUT1 | BUT2);        // 0: clear the interrupt flags
+    P1IE |= (BUT1 | BUT2);          // 1: enable the interrupts
 
     // Enable the global interrupt bit (call an intrinsic function)
     _enable_interrupts();
@@ -61,9 +56,17 @@ void main(void) {
 }
 
 //******* Writing the ISR *******
-#pragma vector = TIMER0_A0_VECTOR // Link the ISR to the vector
-__interrupt void T0A0_ISR() {
-    // Interrupt response goes here
-    P1OUT ^= redLED; // toggle LED
-    TA0CTL &= ~TAIFG; // clear flag
+#pragma vector = PORT1_VECTOR // Write the vector name
+__interrupt void Port1_ISR() {
+    // Detect button 1 interrupt flag
+    if (P1IFG & BUT1) {
+        P1OUT ^= redLED;
+        P1IFG &= ~BUT1;
+    }
+
+    // Detect button 2 interrupt flag
+    if (P1IFG & BUT2) {
+        P9OUT ^= greenLED;
+        P1IFG &= ~BUT2;
+    }
 }
