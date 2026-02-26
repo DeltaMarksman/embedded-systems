@@ -97,7 +97,6 @@ void right_button_pressed() {
 //******* Writing the ISR *******
 #pragma vector = PORT1_VECTOR // Write the vector name
 __interrupt void Port1_ISR() {
-    _delay_cycles(100000);
     // Detect button 1 interrupt flag
     if ((P1IFG & BUT1) == BUT1) {
         P1IFG &= ~BUT1;
@@ -111,6 +110,7 @@ __interrupt void Port1_ISR() {
 
         right_button_pressed();
     }
+    _delay_cycles(100000);
 }
 
 int light_on = 0;
