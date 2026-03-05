@@ -107,8 +107,6 @@ int main(void) {
     // Initialize LCD
     Initialize_LCD();
 
-    lcd_write_uint16(300);
-
     // Flash the red LED forever
     for (;;) {
         for (n = 0; n <= 60000; n++) {}   // Delay
