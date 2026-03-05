@@ -4,8 +4,6 @@
 
 #define redLED     BIT0   // Red at P1.0
 #define greenLED   BIT7   // Green at P9.7
-#define S1_BUTTON     BIT1
-#define S2_BUTTON     BIT2
 
 #define LCD_DIGIT_1  LCDM10   // Leftmost digit
 #define LCD_DIGIT_2  LCDM6
@@ -50,30 +48,6 @@ void lcd_write_uint16(unsigned int n)
 
 }
 
-void config_ACLK_to_32KHz_crystal() {
-    // By default, ACLK runs on LFMODCLK at 5MHz/128 = 39 KHz
-    // Reroute pins to LFXIN/LFXOUT functionality
-
-    PJSEL1 &= ~BIT4;
-    PJSEL0 |= BIT4;
-
-    // Wait until the oscillator fault flags remain cleared
-    CSCTL0 = CSKEY; // Unlock CS registers
-
-    do {
-        CSCTL5 &= ~LFXTOFFG; // Local fault flag
-        SFRIFG1 &= ~OFIFG; // Global fault flag
-    } while((CSCTL5 & LFXTOFFG) != 0);
-
-
-    CSCTL0_H = 0; // Lock CS registers
-    return;
-}
-
-
-int counter = 0;
-
-
 int main(void) {
 
     volatile unsigned int n;
@@ -87,27 +61,10 @@ int main(void) {
     P1OUT |= redLED;              // Red ON
     P9OUT &= ~greenLED;           // Green OFF
 
-    P1DIR &= ~(S1_BUTTON | S2_BUTTON);
-    P1REN |=  (S1_BUTTON | S2_BUTTON);
-    P1OUT |=  (S1_BUTTON | S2_BUTTON);
-    P1IES |=  (S1_BUTTON | S2_BUTTON);
-    P1IFG &= ~(S1_BUTTON | S2_BUTTON);
-    P1IE  |=  (S1_BUTTON | S2_BUTTON);
-
-    // Configure ACLK to the 32 KHz crystal
-        config_ACLK_to_32KHz_crystal();
-
-
-
-    TA0CCR0 = 32768 - 1;          // 1 second @ 32kHz
-    TA0CCTL0 |= CCIE;             // enable interrupt
-    TA0CTL = TASSEL_1 | MC_1;     // ACLK, up mode
-    __enable_interrupt();
-
     // Initialize LCD
     Initialize_LCD();
 
-    lcd_write_uint16(300);
+    lcd_write_uint16(40000);
 
     // Flash the red LED forever
     for (;;) {
@@ -116,33 +73,6 @@ int main(void) {
     }
 
     return 0;
-}
-
-//increment timer
-#pragma vector = TIMER0_A0_VECTOR
-__interrupt void TIMER0_A0_ISR(void)
-{
-    counter++;
-    lcd_write_uint16(counter);
-}
-
-// clearing and adding
-#pragma vector = PORT1_VECTOR
-__interrupt void PORT1_ISR(void)
-{
-    if (P1IFG & BIT1) {       // S1 pressed
-        _delay_cycles(20000);
-        counter = 0;
-        lcd_write_uint16(counter);
-        P1IFG &= ~BIT1;
-    }
-
-    if (P1IFG & BIT2) {       // S2 pressed
-        _delay_cycles(20000);
-        counter += 1000;
-        lcd_write_uint16(counter);
-        P1IFG &= ~BIT2;
-    }
 }
 
 //**********************************************************
@@ -154,7 +84,7 @@ void Initialize_LCD() {
 
     PJSEL0 = BIT4 | BIT5;     // For LFXT
 
-    LCDCPCTL0 = 0xFFD0;
+    LCDCPCTL0   = 0xFFD0;
     LCDCPCTL1 = 0xF83F;
     LCDCPCTL2 = 0x00F8;
 
