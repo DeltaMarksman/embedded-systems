@@ -1,0 +1,133 @@
+// Timer_A continuous mode, with interrupts, flashes LEDs
+#include <msp430fr6989.h>
+#define redLED BIT0 // Red LED at P1.0
+#define greenLED BIT7 // Green LED at P9.7
+#define BUT1 BIT1 // Button S1 at Port 1.1
+#define BUT2 BIT2 // Button S2 at Port 1.2
+
+// Speed timings
+#define NO_CORRECTION_NEEDED        16384   //500ms
+#define LOW_CORRECTION_NEEDED       8192    //250ms
+#define MEDIUM_CORRECTION_NEEDED    4096    //125ms
+#define HIGH_CORRECTION_NEEDED      2048    //62.5ms
+
+void config_ACLK_to_32KHz_crystal() {
+    // By default, ACLK runs on LFMODCLK at 5MHz/128 = 39 KHz
+    // Reroute pins to LFXIN/LFXOUT functionality
+
+    PJSEL1 &= ~BIT4;
+    PJSEL0 |= BIT4;
+
+    // Wait until the oscillator fault flags remain cleared
+    CSCTL0 = CSKEY; // Unlock CS registers
+
+    do {
+        CSCTL5 &= ~LFXTOFFG; // Local fault flag
+        SFRIFG1 &= ~OFIFG; // Global fault flag
+    } while((CSCTL5 & LFXTOFFG) != 0);
+
+
+    CSCTL0_H = 0; // Lock CS registers
+    return;
+}
+
+
+
+void main(void) {
+
+    WDTCTL = WDTPW | WDTHOLD; // Stop the Watchdog timer
+    PM5CTL0 &= ~LOCKLPM5; // Enable the GPIO pins
+
+
+    P1DIR |= redLED; // Configure pin as output
+    P9DIR |= greenLED; // Configure pin as output
+    P1OUT &= ~redLED; // Turn LED Off
+    P9OUT &= ~greenLED; // Turn LED Off
+
+
+    // Configure ACLK to the 32 KHz crystal
+    config_ACLK_to_32KHz_crystal();
+
+    // Configure Channel 0 for up mode with interrupts
+    TA0CCR0 = NO_CORRECTION_NEEDED; //@ 32KHz, 1 second = 2^16
+    TA0CCTL0 |= CCIE;
+    TA0CCTL0 &= ~CCIFG;
+
+    // Configure Timer_A
+    // Use ACLK, divide by 1, continuous mode, TAR cleared
+    TA0CTL = TASSEL_1 | ID_0 | MC_1 | TACLR ;
+
+    // Configure the buttons for interrupts
+    P1DIR &= ~(BUT1 | BUT2);        // 0: input
+    P1REN |= (BUT1 | BUT2);         // 1: enable built-in resistors
+    P1OUT |= (BUT1 | BUT2);         // 1: built-in resistor is pulled up to Vcc
+    P1IES |= (BUT1 | BUT2);         // 1: interrupt on falling edge (0 for rising edge)
+    P1IFG &= ~(BUT1 | BUT2);        // 0: clear the interrupt flags
+    P1IE |= (BUT1 | BUT2);          // 1: enable the interrupts
+
+    // Enable the global interrupt bit (call an intrinsic function)
+    _enable_interrupts();
+
+
+    // Infinite loop... the code waits here between interrupts
+    for(;;) {}
+}
+
+// Delays
+const int delays[4] = {
+    NO_CORRECTION_NEEDED,
+    LOW_CORRECTION_NEEDED,
+    MEDIUM_CORRECTION_NEEDED,
+    HIGH_CORRECTION_NEEDED
+};
+
+int position = 0;
+
+void left_button_pressed() {
+    position = position <= -3 ? -3 : position -1;
+    TA0CCR0 = delays[abs(position)];
+}
+
+void right_button_pressed() {
+    position = position >= 3 ? 3 : position +1;
+    TA0CCR0 = delays[abs(position)];
+}
+
+
+//******* Writing the ISR *******
+#pragma vector = PORT1_VECTOR // Write the vector name
+__interrupt void Port1_ISR() {
+    // Detect button 1 interrupt flag
+    if ((P1IFG & BUT1) == BUT1) {
+        P1IFG &= ~BUT1;
+        _delay_cycles(20000);
+
+        left_button_pressed();
+    }
+
+    // Detect button 2 interrupt flag
+    if ((P1IFG & BUT2) == BUT2) {
+        P1IFG &= ~BUT2;
+        _delay_cycles(20000);
+
+        right_button_pressed();
+    }
+}
+
+
+#pragma vector = TIMER0_A0_VECTOR // Link the ISR to the vector
+__interrupt void T0A0_ISR() {
+    // Interrupt response goes here
+    int green_led_active = position >= 0 ? 1 : 0;
+    int red_led_active = position <= 0 ? 1 : 0;
+
+    P1OUT ^= redLED; // toggle LED
+    P9OUT ^= greenLED; // toggle LED
+
+    // Turn off inactive lights
+    if (!red_led_active)
+        P1OUT &= ~redLED;
+
+    if (!green_led_active)
+        P9OUT &= ~greenLED;
+}
