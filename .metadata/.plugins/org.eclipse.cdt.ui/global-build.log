@@ -1994,3 +1994,42 @@ remark #10372-D: (ULP 4.1) Detected uninitialized Port E in this project. Recomm
  
 
 **** Build Finished ****
+
+**** Build of configuration Debug for project lab_5 ****
+
+"C:\\ti\\ccsv7\\utils\\bin\\gmake" -k -j 24 all -O 
+ 
+'Building file: "../main.c"'
+'Invoking: MSP430 Compiler'
+"C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_16.9.6.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccsv7/ccs_base/msp430/include" --include_path="C:/Users/sudan/embedded-systems/lab_5" --include_path="C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_16.9.6.LTS/include" --advice:power=all --advice:hw_config=all --define=__MSP430FR6989__ --define=_MPU_ENABLE -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="main.d_raw"  "../main.c"
+"../main.c", line 91: remark #1530-D: (ULP 5.1) Detected divide operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 92: remark #1530-D: (ULP 5.1) Detected modulo operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 93: remark #1530-D: (ULP 5.1) Detected divide operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 94: remark #1530-D: (ULP 5.1) Detected modulo operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 95: remark #1530-D: (ULP 5.1) Detected divide operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 96: remark #1530-D: (ULP 5.1) Detected modulo operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 226: warning #112-D: statement is unreachable
+"../main.c", line 191: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../main.c", line 219: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../main.c", line 191: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../main.c", line 234: remark #1538-D: (ULP 10.1) ISR TIMER0_A0_ISR calls function time_increment_one_second. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../main.c", line 235: remark #1538-D: (ULP 10.1) ISR TIMER0_A0_ISR calls function lcd_update. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../main.c", line 245: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../main.c", line 251: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+'Finished building: "../main.c"'
+ 
+'Building target: "lab_5.out"'
+'Invoking: MSP430 Linker'
+"C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_16.9.6.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --advice:power=all --advice:hw_config=all --define=__MSP430FR6989__ --define=_MPU_ENABLE -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 -z -m"lab_5.map" --heap_size=160 --stack_size=160 --cinit_hold_wdt=on -i"C:/ti/ccsv7/ccs_base/msp430/include" -i"C:/ti/ccsv7/ccs_base/msp430/lib/5xx_6xx_FRxx" -i"C:/ti/ccsv7/ccs_base/msp430/lib/FR59xx" -i"C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_16.9.6.LTS/lib" -i"C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_16.9.6.LTS/include" --priority --reread_libs --define=_MPU_ENABLE --diag_wrap=off --display_error_number --warn_sections --xml_link_info="lab_5_linkInfo.xml" --use_hw_mpy=F5 --rom_model -o "lab_5.out" "./main.obj" "../lnk_msp430fr6989.cmd"  -llibmpu_init.a -llibmath.a -llibc.a 
+<Linking>
+warning #10421-D: For FRAM devices running at higher than 8MHz, FRAM waitstate needs to be configured accordingly.
+remark #10371-D: (ULP 1.1) Detected no uses of low power mode state changing instructions
+remark #10372-D: (ULP 4.1) Detected uninitialized Port A in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+remark #10372-D: (ULP 4.1) Detected uninitialized Port B in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+remark #10372-D: (ULP 4.1) Detected uninitialized Port C in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+remark #10372-D: (ULP 4.1) Detected uninitialized Port D in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+remark #10372-D: (ULP 4.1) Detected uninitialized Port E in this project. Recommend initializing all unused ports to eliminate wasted current consumption on unused pins.
+'Finished building target: "lab_5.out"'
+ 
+
+**** Build Finished ****

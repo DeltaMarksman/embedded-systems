@@ -12,14 +12,14 @@
 "../main.c", line 94: remark #1530-D: (ULP 5.1) Detected modulo operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
 "../main.c", line 95: remark #1530-D: (ULP 5.1) Detected divide operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
 "../main.c", line 96: remark #1530-D: (ULP 5.1) Detected modulo operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
-"../main.c", line 227: warning #112-D: statement is unreachable
-"../main.c", line 192: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
-"../main.c", line 220: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
-"../main.c", line 192: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
-"../main.c", line 235: remark #1538-D: (ULP 10.1) ISR TIMER0_A0_ISR calls function time_increment_one_second. Recommend moving function call away from ISR, or inlining the function, or using pragmas
-"../main.c", line 236: remark #1538-D: (ULP 10.1) ISR TIMER0_A0_ISR calls function lcd_update. Recommend moving function call away from ISR, or inlining the function, or using pragmas
-"../main.c", line 246: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
-"../main.c", line 252: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../main.c", line 226: warning #112-D: statement is unreachable
+"../main.c", line 191: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../main.c", line 219: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../main.c", line 191: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../main.c", line 234: remark #1538-D: (ULP 10.1) ISR TIMER0_A0_ISR calls function time_increment_one_second. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../main.c", line 235: remark #1538-D: (ULP 10.1) ISR TIMER0_A0_ISR calls function lcd_update. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../main.c", line 245: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../main.c", line 251: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
 'Finished building: "../main.c"'
  
 'Building target: "lab_5.out"'
