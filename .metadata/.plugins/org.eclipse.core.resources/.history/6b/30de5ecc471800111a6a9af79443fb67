@@ -4,8 +4,6 @@
 
 #define redLED     BIT0   // Red at P1.0
 #define greenLED   BIT7   // Green at P9.7
-#define S1_BUTTON     BIT1
-#define S2_BUTTON     BIT2
 
 #define LCD_DIGIT_1  LCDM10   // Leftmost digit
 #define LCD_DIGIT_2  LCDM6
@@ -86,13 +84,6 @@ int main(void) {
 
     P1OUT |= redLED;              // Red ON
     P9OUT &= ~greenLED;           // Green OFF
-
-    P1DIR &= ~(S1_BUTTON | S2_BUTTON);
-    P1REN |=  (S1_BUTTON | S2_BUTTON);
-    P1OUT |=  (S1_BUTTON | S2_BUTTON);
-    P1IES |=  (S1_BUTTON | S2_BUTTON);
-    P1IFG &= ~(S1_BUTTON | S2_BUTTON);
-    P1IE  |=  (S1_BUTTON | S2_BUTTON);
 
     // Configure ACLK to the 32 KHz crystal
         config_ACLK_to_32KHz_crystal();

@@ -6,20 +6,20 @@
 'Building file: "../main.c"'
 'Invoking: MSP430 Compiler'
 "C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_16.9.6.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccsv7/ccs_base/msp430/include" --include_path="C:/Users/sudan/embedded-systems/lab_5" --include_path="C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_16.9.6.LTS/include" --advice:power=all --advice:hw_config=all --define=__MSP430FR6989__ --define=_MPU_ENABLE -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="main.d_raw"  "../main.c"
-"../main.c", line 34: remark #1530-D: (ULP 5.1) Detected modulo operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
-"../main.c", line 35: remark #1530-D: (ULP 5.1) Detected modulo operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
 "../main.c", line 36: remark #1530-D: (ULP 5.1) Detected modulo operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
 "../main.c", line 37: remark #1530-D: (ULP 5.1) Detected modulo operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
 "../main.c", line 38: remark #1530-D: (ULP 5.1) Detected modulo operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
 "../main.c", line 39: remark #1530-D: (ULP 5.1) Detected modulo operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
-"../main.c", line 109: warning #112-D: statement is unreachable
-"../main.c", line 105: remark #1544-D: (ULP 13.1) Detected loop counting up. Recommend loops count down as detecting zeros is easier
-"../main.c", line 105: remark #1527-D: (ULP 2.1) Detected SW delay loop using empty loop. Recommend using a timer module instead
-"../main.c", line 117: remark #1538-D: (ULP 10.1) ISR TIMER0_A0_ISR calls function lcd_write_uint16. Recommend moving function call away from ISR, or inlining the function, or using pragmas
-"../main.c", line 125: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
-"../main.c", line 127: remark #1538-D: (ULP 10.1) ISR PORT1_ISR calls function lcd_write_uint16. Recommend moving function call away from ISR, or inlining the function, or using pragmas
-"../main.c", line 132: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
-"../main.c", line 134: remark #1538-D: (ULP 10.1) ISR PORT1_ISR calls function lcd_write_uint16. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../main.c", line 40: remark #1530-D: (ULP 5.1) Detected modulo operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 41: remark #1530-D: (ULP 5.1) Detected modulo operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 118: warning #112-D: statement is unreachable
+"../main.c", line 114: remark #1544-D: (ULP 13.1) Detected loop counting up. Recommend loops count down as detecting zeros is easier
+"../main.c", line 114: remark #1527-D: (ULP 2.1) Detected SW delay loop using empty loop. Recommend using a timer module instead
+"../main.c", line 126: remark #1538-D: (ULP 10.1) ISR TIMER0_A0_ISR calls function lcd_write_uint16. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../main.c", line 134: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../main.c", line 136: remark #1538-D: (ULP 10.1) ISR PORT1_ISR calls function lcd_write_uint16. Recommend moving function call away from ISR, or inlining the function, or using pragmas
+"../main.c", line 141: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../main.c", line 143: remark #1538-D: (ULP 10.1) ISR PORT1_ISR calls function lcd_write_uint16. Recommend moving function call away from ISR, or inlining the function, or using pragmas
 'Finished building: "../main.c"'
  
 'Building target: "lab_5.out"'

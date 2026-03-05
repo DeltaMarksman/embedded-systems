@@ -4,8 +4,8 @@
 
 #define redLED     BIT0   // Red at P1.0
 #define greenLED   BIT7   // Green at P9.7
-#define S1_BUTTON     BIT1
-#define S2_BUTTON     BIT2
+#define BUTTON_S1_PIN     BIT1
+#define BUTTON_S2_PIN     BIT2
 
 #define LCD_DIGIT_1  LCDM10   // Leftmost digit
 #define LCD_DIGIT_2  LCDM6
