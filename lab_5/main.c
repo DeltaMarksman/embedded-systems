@@ -5,12 +5,12 @@
 #define redLED     BIT0   // Red at P1.0
 #define greenLED   BIT7   // Green at P9.7
 
-#define LCD_DIGIT_1  LCDM10   // Leftmost digit
-#define LCD_DIGIT_2  LCDM6
-#define LCD_DIGIT_3  LCDM4
-#define LCD_DIGIT_4  LCDM19
+#define LCD_DIGIT_1  LCDM19   // leftmost digit
+#define LCD_DIGIT_2  LCDM18
+#define LCD_DIGIT_3  LCDM17
+#define LCD_DIGIT_4  LCDM16
 #define LCD_DIGIT_5  LCDM15
-#define LCD_DIGIT_6  LCDM8    // Rightmost digit
+#define LCD_DIGIT_6  LCDM8    // rightmost digit
 
 void Initialize_LCD();
 
@@ -28,50 +28,6 @@ const unsigned char LCD_Shapes[10] = {
     0xF7    // 9
 };
 
-void lcd_write_uint16(unsigned int n)
-{
-    // find each digit
-    unsigned int d1 = (n / 100000) % 10;
-    unsigned int d2 = (n / 10000)  % 10;
-    unsigned int d3 = (n / 1000)   % 10;
-    unsigned int d4 = (n / 100)    % 10;
-    unsigned int d5 = (n / 10)     % 10;
-    unsigned int d6 = (n / 1)      % 10;
-
-    // set ctrl regs to digits. If not needed, clear.
-    LCD_DIGIT_1 = (n < 100000) ? 0 : LCD_Shapes[d1];
-    LCD_DIGIT_2 = (n < 10000)  ? 0 : LCD_Shapes[d2];
-    LCD_DIGIT_3 = (n < 1000)   ? 0 : LCD_Shapes[d3];
-    LCD_DIGIT_4 = (n < 100)    ? 0 : LCD_Shapes[d4];
-    LCD_DIGIT_5 = (n < 10)     ? 0 : LCD_Shapes[d5];
-    LCD_DIGIT_6 = LCD_Shapes[d6]; // if the nubmer is 0 we still want to show 0
-
-}
-
-void config_ACLK_to_32KHz_crystal() {
-    // By default, ACLK runs on LFMODCLK at 5MHz/128 = 39 KHz
-    // Reroute pins to LFXIN/LFXOUT functionality
-
-    PJSEL1 &= ~BIT4;
-    PJSEL0 |= BIT4;
-
-    // Wait until the oscillator fault flags remain cleared
-    CSCTL0 = CSKEY; // Unlock CS registers
-
-    do {
-        CSCTL5 &= ~LFXTOFFG; // Local fault flag
-        SFRIFG1 &= ~OFIFG; // Global fault flag
-    } while((CSCTL5 & LFXTOFFG) != 0);
-
-
-    CSCTL0_H = 0; // Lock CS registers
-    return;
-}
-
-
-int counter = 0;
-
-
 int main(void) {
 
     volatile unsigned int n;
@@ -85,20 +41,13 @@ int main(void) {
     P1OUT |= redLED;              // Red ON
     P9OUT &= ~greenLED;           // Green OFF
 
-    // Configure ACLK to the 32 KHz crystal
-        config_ACLK_to_32KHz_crystal();
-
-
-
-    TA0CCR0 = 32768 - 1;          // 1 second @ 32kHz
-    TA0CCTL0 |= CCIE;             // enable interrupt
-    TA0CTL = TASSEL_1 | MC_1;     // ACLK, up mode
-    __enable_interrupt();
-
     // Initialize LCD
     Initialize_LCD();
 
-    lcd_write_uint16(300);
+    // Display 430 on the rightmost three digits
+    LCD_DIGIT_6 = LCD_Shapes[4];       // Left digit
+    LCD_DIGIT_5 = LCD_Shapes[3];       // Middle digit
+    LCD_DIGIT_4  = LCD_Shapes[0];       // Right digit
 
     // Flash the red LED forever
     for (;;) {
@@ -107,33 +56,6 @@ int main(void) {
     }
 
     return 0;
-}
-
-//increment timer
-#pragma vector = TIMER0_A0_VECTOR
-__interrupt void TIMER0_A0_ISR(void)
-{
-    counter++;
-    lcd_write_uint16(counter);
-}
-
-// clearing and adding
-#pragma vector = PORT1_VECTOR
-__interrupt void PORT1_ISR(void)
-{
-    if (P1IFG & BIT1) {       // S1 pressed
-        _delay_cycles(20000);
-        counter = 0;
-        lcd_write_uint16(counter);
-        P1IFG &= ~BIT1;
-    }
-
-    if (P1IFG & BIT2) {       // S2 pressed
-        _delay_cycles(20000);
-        counter += 1000;
-        lcd_write_uint16(counter);
-        P1IFG &= ~BIT2;
-    }
 }
 
 //**********************************************************
@@ -145,7 +67,7 @@ void Initialize_LCD() {
 
     PJSEL0 = BIT4 | BIT5;     // For LFXT
 
-    LCDCPCTL0 = 0xFFD0;
+    LCD_DIGIT_6 = 0xFFD0;
     LCDCPCTL1 = 0xF83F;
     LCDCPCTL2 = 0x00F8;
 
