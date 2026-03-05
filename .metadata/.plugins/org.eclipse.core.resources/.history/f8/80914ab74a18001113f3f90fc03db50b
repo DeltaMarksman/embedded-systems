@@ -14,15 +14,6 @@
 #define LCD_DIGIT_5  LCDM15
 #define LCD_DIGIT_6  LCDM8    // Rightmost digit
 
-#define COLON_MEM      LCDM7
-#define COLON_BIT      BIT2
-
-#define TIMER_SYMBOL_MEM     LCDM3
-#define TIMER_SYMBOL_BIT     BIT3
-
-#define EXCL_MEM       LCDM3
-#define EXCL_BIT       BIT0
-
 void Initialize_LCD();
 
 // Digit segment shapes for MSP430FR6989 LCD
@@ -116,6 +107,7 @@ int main(void) {
     // Initialize LCD
     Initialize_LCD();
 
+    lcd_write_uint16(300);
 
     // Flash the red LED forever
     for (;;) {
