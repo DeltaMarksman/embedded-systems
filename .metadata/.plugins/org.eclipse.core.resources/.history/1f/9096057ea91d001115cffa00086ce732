@@ -122,7 +122,7 @@ int main(void)
 
     Initialize_UART();
 
-    uart_write_string("Hello");
+    uart_write_string("Hello\n\r");
     uart_write_uint16(0);
     uart_write_uint16(7);
     uart_write_uint16(42);

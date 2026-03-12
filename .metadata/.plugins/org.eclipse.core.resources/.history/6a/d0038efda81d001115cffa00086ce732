@@ -10,11 +10,6 @@
 #define GREEN_LED  BIT7       // P9.7
 
 
-void uart_newline() {
-    uart_write_char('\n');
-    uart_write_char('\r');
-}
-
 void uart_write_char(unsigned char ch){
     // Wait for any ongoing transmission to complete
     while ( (FLAGS & TXFLAG)==0 ) {}
@@ -25,40 +20,10 @@ void uart_write_char(unsigned char ch){
     return;
 }
 
-void uart_write_uint16(unsigned int n) {
-    unsigned int divisor = 10000;
-    unsigned char started = 0;
-
-    if (n == 0) {
-        uart_write_char('0');
-        return;
-    }
-
-    while (divisor > 0) {
-        unsigned int digit = n / divisor;
-        if (digit > 0 || started) {
-            uart_write_char('0' + digit);
-            started = 1;
-        }
-        n %= divisor;
-        divisor /= 10;
-    }
-
-    uart_newline();
-}
-
-void uart_write_string(char *str) {
-    while (*str != '\0') {
-        uart_write_char(*str);
-        str++;
-    }
-
-    uart_newline();
-}
-
 void uart_write_charln(unsigned char ch) {
     uart_write_char(ch);
-    uart_newline();
+    uart_write_char('\n');
+    uart_write_char('\r');
 }
 
 
@@ -122,12 +87,29 @@ int main(void)
 
     Initialize_UART();
 
-    uart_write_string("Hello");
-    uart_write_uint16(0);
-    uart_write_uint16(7);
-    uart_write_uint16(42);
-    uart_write_uint16(9999);
-    uart_write_uint16(65536);
+    int num = 0;
+    while (1) {
+        //tx and flash led
+        uart_write_charln('0' + num);
+        P1OUT ^= RED_LED;
+
+        //read and parse
+        char rx = uart_read_char();
+        if (rx == '1') {
+            P9OUT |= GREEN_LED;
+        }
+        else if (rx == '2') {
+            P9OUT &= ~GREEN_LED;
+        }
+
+        //count up
+        num++;
+        if (num > 9)
+            num = 0;
+
+
+        _delay_cycles(10000);
+    }
 
 	return 0;
 }

@@ -6,10 +6,13 @@
 'Building file: "../main.c"'
 'Invoking: MSP430 Compiler'
 "C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_16.9.6.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --include_path="C:/ti/ccsv7/ccs_base/msp430/include" --include_path="C:/Users/sudan/embedded-systems/lab_6" --include_path="C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_16.9.6.LTS/include" --advice:power=all --advice:hw_config=all --define=__MSP430FR6989__ --define=_MPU_ENABLE -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU40 --preproc_with_compile --preproc_dependency="main.d_raw"  "../main.c"
-"../main.c", line 15: remark #1528-D: (ULP 3.1) Detected flag polling using UCA1IFG. Recommend using an interrupt combined with enter LPMx and ISR
-"../main.c", line 114: warning #112-D: statement is unreachable
-"../main.c", line 111: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
-"../main.c", line 111: remark #1527-D: (ULP 2.1) Detected SW delay loop using __delay_cycles. Recommend using a timer module instead
+"../main.c", line 14: warning #225-D: function "uart_write_char" declared implicitly
+"../main.c", line 18: warning #161-D: declaration is incompatible with previous "uart_write_char" (declared at line 14)
+"../main.c", line 20: remark #1528-D: (ULP 3.1) Detected flag polling using UCA1IFG. Recommend using an interrupt combined with enter LPMx and ISR
+"../main.c", line 38: remark #1530-D: (ULP 5.1) Detected divide operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 43: remark #1530-D: (ULP 5.1) Detected modulo operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 44: remark #1530-D: (ULP 5.1) Detected divide operation(s). Recommend moving them to RAM during run time or not using as these are processing/power intensive
+"../main.c", line 130: warning #70-D: integer conversion resulted in truncation
 'Finished building: "../main.c"'
  
 'Building target: "lab_6.out"'
