@@ -1,0 +1,74 @@
+/*
+ * easy_lscs.c
+ *
+ *  Created on: Mar 11, 2026
+ *      Author: sudan
+ */
+#include "easy_lscs.h"
+
+void init_LEDs(void) {
+    RED_LED_DIR |= RED_LED_PIN;
+    GREEN_LED_DIR |= GREEN_LED_PIN;
+
+    RED_LED_OUT &= ~RED_LED_PIN;
+    GREEN_LED_OUT &= ~GREEN_LED_PIN;
+}
+
+void red_on(void) {
+    RED_LED_OUT |= RED_LED_PIN;
+}
+
+void red_off(void) {
+    RED_LED_OUT &= ~RED_LED_PIN;
+}
+
+void red_toggle(void) {
+    RED_LED_OUT ^= RED_LED_PIN;
+}
+
+void green_on(void) {
+    GREEN_LED_OUT |= GREEN_LED_PIN;
+}
+
+void green_off(void) {
+    GREEN_LED_OUT &= ~GREEN_LED_PIN;
+}
+
+void green_toggle(void) {
+    GREEN_LED_OUT ^= GREEN_LED_PIN;
+}
+
+void init_buttons(void) {
+    P1DIR &= ~(S1_BUTTON | S2_BUTTON);
+    P1REN |=  (S1_BUTTON | S2_BUTTON);
+    P1OUT |=  (S1_BUTTON | S2_BUTTON);
+    P1IES |=  (S1_BUTTON | S2_BUTTON);
+    P1IFG &= ~(S1_BUTTON | S2_BUTTON);
+    P1IE  |=  (S1_BUTTON | S2_BUTTON);
+}
+
+//**********************************
+// Configures ACLK to 32 KHz crystal
+void config_ACLK_to_32KHz_crystal(void) {
+    // By default, ACLK runs on LFMODCLK at 5MHz/128 = 39 KHz
+
+    // Reroute pins to LFXIN/LFXOUT functionality
+    PJSEL1 &= ~BIT4;
+    PJSEL0 |= BIT4;
+
+    // Wait until the oscillator fault flags remain cleared
+    CSCTL0 = CSKEY; // Unlock CS registers
+
+    do {
+        CSCTL5 &= ~LFXTOFFG; // Local fault flag
+        SFRIFG1 &= ~OFIFG; // Global fault flag
+    } while((CSCTL5 & LFXTOFFG) != 0);
+
+
+    CSCTL0_H = 0; // Lock CS registers
+    return;
+}
+
+
+
+

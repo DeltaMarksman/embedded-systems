@@ -1,4 +1,5 @@
 #include <msp430.h> 
+#include <easy_lscs.h>
 
 #define FLAGS UCA1IFG // Contains the transmit & receive flags
 #define RXFLAG UCRXIFG // Receive flag
@@ -6,14 +7,7 @@
 #define TXBUFFER UCA1TXBUF // Transmit buffer
 #define RXBUFFER UCA1RXBUF // Receive buffer
 
-#define RED_LED    BIT0       // P1.0
-#define GREEN_LED  BIT7       // P9.7
 
-
-void uart_newline() {
-    uart_write_char('\n');
-    uart_write_char('\r');
-}
 
 void uart_write_char(unsigned char ch){
     // Wait for any ongoing transmission to complete
@@ -23,6 +17,11 @@ void uart_write_char(unsigned char ch){
     TXBUFFER = ch; // Tx flag goes to 0 and Tx begins!
 
     return;
+}
+
+void uart_newline() {
+    uart_write_char('\n');
+    uart_write_char('\r');
 }
 
 void uart_write_uint16(unsigned int n) {
@@ -76,6 +75,7 @@ unsigned char uart_read_char(void){
 
 
 
+
 // Configure UART to the popular configuration
 // 9600 baud, 8-bit data, LSB first, no parity bits, 1 stop bit
 // no flow control, oversampling reception
@@ -103,24 +103,36 @@ void Initialize_UART(void){
     UCA1CTLW0 &= ~UCSWRST;
 }
 
+void Initialize_UART2(void) {
+    // configure pins for uart
+    P3SEL1 &= ~(BIT4 | BIT5);
+    P3SEL0 |=  (BIT4 | BIT5);
+
+    // Main configuration register
+    UCA1CTLW0 = UCSWRST; // Engage reset; change all the fields to zero
+
+    // Most fields in this register, when set to zero, correspond to the
+    // popular configuration
+    UCA1CTLW0 |= UCSSEL_1; // Set clock to ACLK
+
+    // Baud rate settings for ACLK=32768 Hz, 4800 baud
+    UCA1BRW   = 6;              // UCBR = 6
+    // UCBRS = 0xEE = d, UCBRF = 0, UCOS16 = 0
+    // UCBRS = 0xEE = 1110 1110 = UCBRS5 (bit 1, 2, 3, 4, 5,6,)
+    UCA1MCTLW = 0xEE00;  // no brf and ucos16 is 0
+
+    // Exit the reset state
+    UCA1CTLW0 &= ~UCSWRST;
+}
 
 
-/**
- * main.c
- */
 int main(void)
 {
-	WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
-	PM5CTL0 &= ~LOCKLPM5;
-	
-	// LEDs
-    P1DIR |= RED_LED;
-    P9DIR |= GREEN_LED;
+    WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
+    PM5CTL0 &= ~LOCKLPM5;
 
-    P1OUT &= ~RED_LED;
-    P9OUT &= ~GREEN_LED;
-
-    Initialize_UART();
+    config_ACLK_to_32KHz_crystal();
+    Initialize_UART2();
 
     uart_write_string("Hello");
     uart_write_uint16(0);
@@ -129,5 +141,6 @@ int main(void)
     uart_write_uint16(9999);
     uart_write_uint16(65536);
 
-	return 0;
+
+    return 0;
 }

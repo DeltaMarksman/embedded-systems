@@ -1,0 +1,47 @@
+/*
+ * easy_lscs.h
+ *
+ *  Created on: Mar 11, 2026
+ *      Author: sudan
+ */
+
+#ifndef EASY_LSIO_H_
+#define EASY_LSIO_H_
+
+#include <msp430.h>
+
+// Red LED on P1.0
+#define RED_LED_DIR     P1DIR
+#define RED_LED_OUT     P1OUT
+#define RED_LED_PIN     BIT0
+
+// Green LED on P9.7
+#define GREEN_LED_DIR   P9DIR
+#define GREEN_LED_OUT   P9OUT
+#define GREEN_LED_PIN   BIT7
+
+// Buttons
+#define S1_BUTTON     BIT1
+#define S2_BUTTON     BIT2
+
+// LED control
+void init_LEDs(void);
+void red_on(void);
+void red_off(void);
+void red_toggle(void);
+
+void green_on(void);
+void green_off(void);
+void green_toggle(void);
+
+// Button setup
+void init_buttons(void);
+
+// Clock setup
+void config_ACLK_to_32KHz_crystal(void);
+
+
+
+
+
+#endif /* EASY_LSIO_H_ */
