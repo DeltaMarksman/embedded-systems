@@ -45,8 +45,8 @@ void s2_callback(callback_t cb);
 
 // Clock setup
 void config_ACLK_to_32KHz_crystal(void);
-void config_timer_A_upmode_ms(unsigned int ms);
-void timer_A_callback(callback_t cb);
+void config_upmode(unsigned int ms);
+void timer_callback(callback_t cb);
 
 
 

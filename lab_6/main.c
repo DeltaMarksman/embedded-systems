@@ -6,6 +6,8 @@
 #define TXFLAG UCTXIFG // Transmit flag
 #define TXBUFFER UCA1TXBUF // Transmit buffer
 #define RXBUFFER UCA1RXBUF // Receive buffer
+#define true 1
+#define false 0
 
 
 
@@ -125,6 +127,186 @@ void Initialize_UART2(void) {
     UCA1CTLW0 &= ~UCSWRST;
 }
 
+void cls() {
+    uart_write_string("\033[2J");
+}
+
+void print_runway_template() {
+    uart_write_string("             Runway 1    Runway 2");
+    uart_write_string("Request:         1           3");
+    uart_write_string("Forfeit:         7           9");
+    uart_newline();
+    uart_newline();
+    uart_newline();
+    uart_newline();
+    uart_write_string("--------                 --------");
+    uart_write_string("Runway 1                 Runway 2");
+    uart_write_string("--------                 --------");
+}
+
+/**
+ * main.c
+ */
+
+typedef enum {
+    AVAILABLE,
+    REQUESTED,
+    IN_USE
+} runway_state_t;
+
+runway_state_t runway_1, runway_2 = AVAILABLE;
+int red_led_blinking, green_led_blinking = false;
+
+// is called when runway button is pressed
+void interact_runway_1() {
+    switch (runway_1) {
+    case AVAILABLE:
+        // do nothing
+        break;
+
+    case REQUESTED:
+        // use runway 1
+        runway_1 = IN_USE;
+        uart_write_string("\033[12;1H");
+        uart_write_string("In Use");
+        red_led_blinking = true;
+        break;
+    case IN_USE:
+        // inquiry runway 1
+        uart_write_string("\033[14;1H");
+        uart_write_string("** INQUIRY **");
+        break;
+    }
+}
+
+void interact_runway_2() {
+    switch (runway_2) {
+    case AVAILABLE:
+        // do nothing
+        break;
+
+    case REQUESTED:
+        // use runway 2
+        runway_2 = IN_USE;
+        uart_write_string("\033[12;26H");
+        uart_write_string("\t\t\tIn Use");
+        green_led_blinking = true;
+        break;
+    case IN_USE:
+        // inquiry runway 1
+        uart_write_string("\033[14;26H");
+        uart_write_string("\t\t\t** INQUIRY **");
+        break;
+    }
+}
+
+void request_runway_1() {
+    switch (runway_1) {
+    case AVAILABLE:
+        // Request runway 1
+        runway_1 = REQUESTED;
+        uart_write_string("\033[11;1H");
+        uart_write_string("Requested");
+        red_on();
+        break;
+
+    case REQUESTED:
+        // do nothing
+        break;
+    case IN_USE:
+        // do nothing
+        break;
+    }
+}
+void request_runway_2() {
+    switch (runway_2) {
+    case AVAILABLE:
+        // Request runway 2
+        runway_2 = REQUESTED;
+        uart_write_string("\033[11;26H");
+        uart_write_string("\t\t\tRequested");
+        green_on();
+        break;
+
+    case REQUESTED:
+        // do nothing
+        break;
+    case IN_USE:
+        // do nothing
+        break;
+    }
+}
+void forfeit_runway_1() {
+    switch (runway_1) {
+    case AVAILABLE:
+        // do nothing
+        break;
+
+    case REQUESTED:
+        // forfeit runway 1
+        runway_1 = AVAILABLE;
+        red_led_blinking = false;
+        red_off();
+        uart_write_string("\033[11;1H");
+        uart_write_string("         ");
+        uart_write_string("\033[12;1H");
+        uart_write_string("         ");
+        uart_write_string("\033[14;1H");
+        uart_write_string("             ");
+        break;
+    case IN_USE:
+        // forfeit runway 1
+        runway_1 = AVAILABLE;
+        red_led_blinking = false;
+        red_off();
+        uart_write_string("\033[11;1H");
+        uart_write_string("         ");
+        uart_write_string("\033[12;1H");
+        uart_write_string("         ");
+        uart_write_string("\033[14;1H");
+        uart_write_string("             ");
+        break;
+    }
+}
+void forfeit_runway_2() {
+    switch (runway_2) {
+    case AVAILABLE:
+        // do nothing
+        break;
+
+    case REQUESTED:
+        // forfeit runway 2
+        runway_2 = AVAILABLE;
+        green_led_blinking = false;
+        green_off();
+        uart_write_string("\033[11;26H");
+        uart_write_string("         ");
+        uart_write_string("\033[12;26H");
+        uart_write_string("         ");
+        uart_write_string("\033[14;26H");
+        uart_write_string("             ");
+        break;
+    case IN_USE:
+        // forfeit runway 2
+        runway_2 = AVAILABLE;
+        green_led_blinking = false;
+        green_off();
+        uart_write_string("\033[11;26H");
+        uart_write_string("\t\t\t         ");
+        uart_write_string("\033[12;26H");
+        uart_write_string("\t\t\t         ");
+        uart_write_string("\033[14;26H");
+        uart_write_string("\t\t\t             ");
+        break;
+    }
+}
+
+void flashLed() {
+    if (red_led_blinking)
+        red_toggle();
+    if (green_led_blinking)
+        green_toggle();
+}
 
 int main(void)
 {
@@ -134,13 +316,41 @@ int main(void)
     config_ACLK_to_32KHz_crystal();
     Initialize_UART2();
 
-    uart_write_string("Hello");
-    uart_write_uint16(0);
-    uart_write_uint16(7);
-    uart_write_uint16(42);
-    uart_write_uint16(9999);
-    uart_write_uint16(65536);
+    init_switches();
+    init_leds();
+    red_off();
+    green_off();
+    config_upmode(500); //in ms
+    timer_callback(flashLed);
+    s1_callback(interact_runway_1);
+    s2_callback(interact_runway_2);
+    _enable_interrupts();
 
+
+    cls();
+    uart_write_string("\033[1;1H");
+    print_runway_template();
+    uart_write_string("\033[1C");
+
+    while(1) {
+        // read
+        char input = uart_read_char();
+
+        switch (input) {
+        case '1':
+            request_runway_1();
+            break;
+        case '3':
+            request_runway_2();
+            break;
+        case '7':
+            forfeit_runway_1();
+            break;
+        case '9':
+            forfeit_runway_2();
+            break;
+        }
+    }
 
     return 0;
 }

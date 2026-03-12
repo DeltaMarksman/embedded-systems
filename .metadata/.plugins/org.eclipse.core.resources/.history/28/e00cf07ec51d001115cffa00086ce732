@@ -1,0 +1,131 @@
+/*
+ * easy_lscs.c
+ *
+ *  Created on: Mar 11, 2026
+ *      Author: sudan
+ */
+#include "easy_lscs.h"
+
+
+//interrupts code
+static callback_t ta_cb = 0;
+static callback_t s1_cb = 0;
+static callback_t s2_cb = 0;
+
+void init_leds(void) {
+    RED_LED_DIR |= RED_LED_PIN;
+    GREEN_LED_DIR |= GREEN_LED_PIN;
+
+    RED_LED_OUT &= ~RED_LED_PIN;
+    GREEN_LED_OUT &= ~GREEN_LED_PIN;
+}
+
+void red_on(void) {
+    RED_LED_OUT |= RED_LED_PIN;
+}
+
+void red_off(void) {
+    RED_LED_OUT &= ~RED_LED_PIN;
+}
+
+void red_toggle(void) {
+    RED_LED_OUT ^= RED_LED_PIN;
+}
+
+void green_on(void) {
+    GREEN_LED_OUT |= GREEN_LED_PIN;
+}
+
+void green_off(void) {
+    GREEN_LED_OUT &= ~GREEN_LED_PIN;
+}
+
+void green_toggle(void) {
+    GREEN_LED_OUT ^= GREEN_LED_PIN;
+}
+
+void init_switches(void) {
+    P1DIR &= ~(S1_BUTTON | S2_BUTTON);
+    P1REN |=  (S1_BUTTON | S2_BUTTON);
+    P1OUT |=  (S1_BUTTON | S2_BUTTON);
+    P1IES |=  (S1_BUTTON | S2_BUTTON);
+    P1IFG &= ~(S1_BUTTON | S2_BUTTON);
+    P1IE  |=  (S1_BUTTON | S2_BUTTON);
+}
+
+//interrupts
+void s1_callback(callback_t cb) {
+    s1_cb = cb;
+}
+
+void s2_callback(callback_t cb) {
+    s2_cb = cb;
+}
+
+
+#pragma vector = PORT1_VECTOR
+__interrupt void Port1_ISR(void)
+{
+    if (P1IFG & S1_BUTTON) {
+        P1IFG &= ~S1_BUTTON;
+        s1_cb();
+    }
+
+    if (P1IFG & S2_BUTTON) {
+        P1IFG &= ~S2_BUTTON;
+        s2_cb();
+    }
+}
+
+//**********************************
+// Configures ACLK to 32 KHz crystal
+void config_ACLK_to_32KHz_crystal(void) {
+    // By default, ACLK runs on LFMODCLK at 5MHz/128 = 39 KHz
+
+    // Reroute pins to LFXIN/LFXOUT functionality
+    PJSEL1 &= ~BIT4;
+    PJSEL0 |= BIT4;
+
+    // Wait until the oscillator fault flags remain cleared
+    CSCTL0 = CSKEY; // Unlock CS registers
+
+    do {
+        CSCTL5 &= ~LFXTOFFG; // Local fault flag
+        SFRIFG1 &= ~OFIFG; // Global fault flag
+    } while((CSCTL5 & LFXTOFFG) != 0);
+
+
+    CSCTL0_H = 0; // Lock CS registers
+    return;
+}
+
+
+void config_upmode(unsigned int ms) {
+    // Convert ms to ACLK ticks
+    // ticks = ms * 32768 / 1000
+    unsigned int ticks = (unsigned long)ms * 32768UL / 1000UL;
+
+    if (ticks == 0)
+        ticks = 1;   // Minimum valid period
+
+    TA0CCR0 = ticks - 1;        // Set period
+    TA0CCTL0 = CCIE;            // Enable interrupt
+
+    TA0CTL = TASSEL__ACLK |     // Use ACLK
+             MC__UP     |       // Up mode
+             TACLR;             // Clear TAR
+}
+
+// interupts
+void ta_callback(callback_t cb) {
+    ta_cb = cb;
+}
+
+#pragma vector = TIMER0_A0_VECTOR
+__interrupt void TimerA0_ISR(void)
+{
+    ta_cb();
+}
+
+
+

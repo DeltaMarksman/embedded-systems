@@ -1,7 +1,7 @@
 ******************************************************************************
                   MSP430 Linker PC v16.9.6                     
 ******************************************************************************
->> Linked Wed Mar 11 23:06:14 2026
+>> Linked Thu Mar 12 00:42:14 2026
 
 OUTPUT FILE NAME:   <lab_6.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs_noexit_mpu"  address: 00004422
@@ -18,8 +18,8 @@ MEMORY CONFIGURATION
   INFOC                 00001880   00000080  00000000  00000080  RWIX
   INFOB                 00001900   00000080  00000000  00000080  RWIX
   INFOA                 00001980   00000080  00000000  00000080  RWIX
-  RAM                   00001c00   00000800  000000ac  00000754  RWIX
-  FRAM                  00004400   0000bb80  0000011c  0000ba64  RWIX
+  RAM                   00001c00   00000800  000000b4  0000074c  RWIX
+  FRAM                  00004400   0000bb80  000001ee  0000b992  RWIX
   JTAGSIGNATURE         0000ff80   00000004  00000004  00000000  RWIX  ffff 
   BSLSIGNATURE          0000ff84   00000004  00000004  00000000  RWIX  ffff 
   IPESIGNATURE          0000ff88   00000008  00000008  00000000  RWIX  ffff 
@@ -79,7 +79,7 @@ MEMORY CONFIGURATION
   INT53                 0000fffa   00000002  00000002  00000000  RWIX
   INT54                 0000fffc   00000002  00000002  00000000  RWIX
   RESET                 0000fffe   00000002  00000002  00000000  RWIX
-  FRAM2                 00010000   00014000  00000320  00013ce0  RWIX
+  FRAM2                 00010000   00014000  000007a2  0001385e  RWIX
 
 
 SECTION ALLOCATION MAP
@@ -87,8 +87,13 @@ SECTION ALLOCATION MAP
  output                                  attributes/
 section   page    origin      length       input sections
 --------  ----  ----------  ----------   ----------------
-.data      0    00001c00    0000000c     UNINITIALIZED
+.data      0    00001c00    00000010     UNINITIALIZED
                   00001c00    0000000c     easy_lscs.obj (.data)
+                  00001c0c    00000004     main.obj (.data)
+
+.bss       0    00001c10    00000004     UNINITIALIZED
+                  00001c10    00000002     (.common:red_led_blinking)
+                  00001c12    00000002     (.common:runway_1)
 
 .stack     0    00002360    000000a0     UNINITIALIZED
                   00002360    00000004     rts430x_lc_rd_eabi.lib : boot.obj (.stack)
@@ -121,20 +126,21 @@ section   page    origin      length       input sections
 *          0    00004400    00000052     
                   00004400    00000022     easy_lscs.obj (.text:_isr:Port1_ISR)
                   00004422    0000001e     rts430x_lc_rd_eabi.lib : boot_special.obj (.text:_isr:_c_int00_noargs_noexit_mpu)
-                  00004440    0000000a     easy_lscs.obj (.text:_isr:TimerA0_ISR)
+                  00004440    0000000a     easy_lscs.obj (.text:_isr:T0A0_ISR)
                   0000444a    00000008     rts430x_lc_rd_eabi.lib : isr_trap.obj (.text:_isr:__TI_ISR_TRAP)
 
-.cinit     0    00004504    00000018     
-                  00004504    00000008     (__TI_handler_table)
-                  0000450c    00000007     (.cinit..data.load) [load image, compression = lzss]
-                  00004513    00000001     --HOLE-- [fill = 0]
-                  00004514    00000008     (__TI_cinit_table)
+.cinit     0    000045c4    0000002a     
+                  000045c4    0000000c     (__TI_handler_table)
+                  000045d0    00000007     (.cinit..data.load) [load image, compression = lzss]
+                  000045d7    00000001     --HOLE-- [fill = 0]
+                  000045d8    00000006     (.cinit..bss.load) [load image, compression = zero_init]
+                  000045de    00000010     (__TI_cinit_table)
 
 .init_array 
 *          0    00004400    00000000     UNINITIALIZED
 
-.const     0    00004452    000000b2     
-                  00004452    000000b2     main.obj (.const:.string)
+.const     0    00004452    00000172     
+                  00004452    00000172     main.obj (.const:.string)
 
 $fill000   0    0000ff80    00000004     
                   0000ff80    00000004     --HOLE-- [fill = ffff]
@@ -242,37 +248,60 @@ SYSNMI     0    0000fffc    00000002
 .reset     0    0000fffe    00000002     
                   0000fffe    00000002     rts430x_lc_rd_eabi.lib : boot.obj (.reset)
 
-.text      0    00010000    00000320     
-                  00010000    00000082     rts430x_lc_rd_eabi.lib : autoinit_wdt.obj (.text:_auto_init_hold_wdt)
-                  00010082    00000076                            : copy_decompress_lzss.obj (.text:decompress:lzss:__TI_decompress_lzss)
-                  000100f8    00000064                            : cpy_tbl.obj (.text:copy_in)
-                  0001015c    00000042     main.obj (.text:print_runway_template)
-                  0001019e    00000036     main.obj (.text:main)
-                  000101d4    0000002c     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
-                  00010200    00000028     main.obj (.text:Initialize_UART2)
-                  00010228    00000026     easy_lscs.obj (.text:config_ACLK_to_32KHz_crystal)
-                  0001024e    00000026     easy_lscs.obj (.text:init_switches)
-                  00010274    0000001a     main.obj (.text:uart_write_string)
-                  0001028e    00000018     rts430x_lc_rd_eabi.lib : mult16_f5hw.obj (.text)
-                  000102a6    00000016     easy_lscs.obj (.text:init_leds)
-                  000102bc    00000014     rts430x_lc_rd_eabi.lib : memcpy.obj (.text:memcpy)
-                  000102d0    00000012                            : copy_decompress_none.obj (.text:decompress:none:__TI_decompress_none)
-                  000102e2    00000012     main.obj (.text:uart_newline)
-                  000102f4    00000012     main.obj (.text:uart_read_char)
-                  00010306    0000000e     main.obj (.text:uart_write_char)
-                  00010314    00000006     rts430x_lc_rd_eabi.lib : exit.obj (.text:abort)
-                  0001031a    00000004                            : pre_init.obj (.text:_system_pre_init)
-                  0001031e    00000002                            : startup.obj (.text:_system_post_cinit)
+.text      0    00010000    000007a2     
+                  00010000    000000b8     rts430x_lc_rd_eabi.lib : fs_mpy.obj (.text)
+                  000100b8    00000094     main.obj (.text:main)
+                  0001014c    00000090     rts430x_lc_rd_eabi.lib : fs_div.obj (.text)
+                  000101dc    00000088     main.obj (.text:forfeit_runway_1)
+                  00010264    00000088     main.obj (.text:forfeit_runway_2)
+                  000102ec    00000082     rts430x_lc_rd_eabi.lib : autoinit_wdt.obj (.text:_auto_init_hold_wdt)
+                  0001036e    00000076                            : copy_decompress_lzss.obj (.text:decompress:lzss:__TI_decompress_lzss)
+                  000103e4    00000064                            : cpy_tbl.obj (.text:copy_in)
+                  00010448    00000046                            : fs_tou.obj (.text)
+                  0001048e    00000042     main.obj (.text:print_runway_template)
+                  000104d0    00000038     main.obj (.text:interact_runway_1)
+                  00010508    00000038     main.obj (.text:interact_runway_2)
+                  00010540    00000032     easy_lscs.obj (.text:config_upmode)
+                  00010572    0000002c     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
+                  0001059e    00000028     main.obj (.text:Initialize_UART2)
+                  000105c6    00000026     easy_lscs.obj (.text:config_ACLK_to_32KHz_crystal)
+                  000105ec    00000026     easy_lscs.obj (.text:init_switches)
+                  00010612    00000024     rts430x_lc_rd_eabi.lib : copy_zero_init.obj (.text:decompress:ZI:__TI_zero_init)
+                  00010636    00000024                            : fs_utof.obj (.text)
+                  0001065a    00000020     main.obj (.text:request_runway_1)
+                  0001067a    00000020     main.obj (.text:request_runway_2)
+                  0001069a    0000001a     main.obj (.text:uart_write_string)
+                  000106b4    00000018     rts430x_lc_rd_eabi.lib : mult16_f5hw.obj (.text)
+                  000106cc    00000016     main.obj (.text:flashLed)
+                  000106e2    00000016     easy_lscs.obj (.text:init_leds)
+                  000106f8    00000014     rts430x_lc_rd_eabi.lib : memcpy.obj (.text:memcpy)
+                  0001070c    00000012                            : copy_decompress_none.obj (.text:decompress:none:__TI_decompress_none)
+                  0001071e    00000012     main.obj (.text:uart_newline)
+                  00010730    00000012     main.obj (.text:uart_read_char)
+                  00010742    0000000e     main.obj (.text:uart_write_char)
+                  00010750    0000000a     main.obj (.text:cls)
+                  0001075a    00000008     easy_lscs.obj (.text:green_off)
+                  00010762    00000008     easy_lscs.obj (.text:green_on)
+                  0001076a    00000008     easy_lscs.obj (.text:green_toggle)
+                  00010772    00000006     rts430x_lc_rd_eabi.lib : exit.obj (.text:abort)
+                  00010778    00000006     easy_lscs.obj (.text:red_off)
+                  0001077e    00000006     easy_lscs.obj (.text:red_on)
+                  00010784    00000006     easy_lscs.obj (.text:red_toggle)
+                  0001078a    00000006     easy_lscs.obj (.text:s1_callback)
+                  00010790    00000006     easy_lscs.obj (.text:s2_callback)
+                  00010796    00000006     easy_lscs.obj (.text:timer_callback)
+                  0001079c    00000004     rts430x_lc_rd_eabi.lib : pre_init.obj (.text:_system_pre_init)
+                  000107a0    00000002                            : startup.obj (.text:_system_post_cinit)
 
 MODULE SUMMARY
 
        Module                     code   ro data   rw data
        ------                     ----   -------   -------
     .\
-       main.obj                   236    178       0      
-       easy_lscs.obj              142    4         12     
+       main.obj                   810    370       8      
+       easy_lscs.obj              252    4         12     
     +--+--------------------------+------+---------+---------+
-       Total:                     378    182       12     
+       Total:                     1062   374       20     
                                                           
     C:\ti\ccsv7\ccs_base\msp430\lib\FR59xx\MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib
        mpu_init.o                 44     0         0      
@@ -280,9 +309,14 @@ MODULE SUMMARY
        Total:                     44     0         0      
                                                           
     C:\ti\ccsv7\tools\compiler\ti-cgt-msp430_16.9.6.LTS\lib\rts430x_lc_rd_eabi.lib
+       fs_mpy.obj                 184    0         0      
+       fs_div.obj                 144    0         0      
        autoinit_wdt.obj           130    0         0      
        copy_decompress_lzss.obj   118    0         0      
        cpy_tbl.obj                100    0         0      
+       fs_tou.obj                 70     0         0      
+       copy_zero_init.obj         36     0         0      
+       fs_utof.obj                36     0         0      
        boot_special.obj           30     0         0      
        mult16_f5hw.obj            24     0         0      
        memcpy.obj                 20     0         0      
@@ -319,25 +353,27 @@ MODULE SUMMARY
        int54.obj                  0      2         0      
        startup.obj                2      0         0      
     +--+--------------------------+------+---------+---------+
-       Total:                     460    54        0      
+       Total:                     930    54        0      
                                                           
        Stack:                     0      0         160    
-       Linker Generated:          0      23        0      
+       Linker Generated:          0      41        0      
     +--+--------------------------+------+---------+---------+
-       Grand Total:               882    259       172    
+       Grand Total:               2036   469       180    
 
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 00004514 records: 1, size/record: 8, table size: 8
-	.data: load addr=0000450c, load size=00000007 bytes, run addr=00001c00, run size=0000000c bytes, compression=lzss
+__TI_cinit_table @ 000045de records: 2, size/record: 8, table size: 16
+	.data: load addr=000045d0, load size=00000007 bytes, run addr=00001c00, run size=00000010 bytes, compression=lzss
+	.bss: load addr=000045d8, load size=00000006 bytes, run addr=00001c10, run size=00000004 bytes, compression=zero_init
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 00004504 records: 2, size/record: 4, table size: 8
-	index: 0, handler: __TI_decompress_lzss
-	index: 1, handler: __TI_decompress_none
+__TI_handler_table @ 000045c4 records: 3, size/record: 4, table size: 12
+	index: 0, handler: __TI_zero_init
+	index: 1, handler: __TI_decompress_lzss
+	index: 2, handler: __TI_decompress_none
 
 
 GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
@@ -601,7 +637,7 @@ address   name
 000009ce  AESAXIN_L                   
 000004be  BCD2BIN                     
 000004bc  BIN2BCD                     
-00010314  C$$EXIT                     
+00010772  C$$EXIT                     
 0000043e  CAPTIO0CTL                  
 0000043f  CAPTIO0CTL_H                
 0000043e  CAPTIO0CTL_L                
@@ -1093,7 +1129,7 @@ address   name
 00000146  GCCTL1                      
 00000147  GCCTL1_H                    
 00000146  GCCTL1_L                    
-00010200  Initialize_UART2            
+0001059e  Initialize_UART2            
 00000a40  LCDBM1                      
 00000a49  LCDBM10                     
 00000a4a  LCDBM11                     
@@ -1520,6 +1556,7 @@ address   name
 0000019a  SYSUNIV                     
 0000019b  SYSUNIV_H                   
 0000019a  SYSUNIV_L                   
+00004440  T0A0_ISR                    
 00000352  TA0CCR0                     
 00000354  TA0CCR1                     
 00000356  TA0CCR2                     
@@ -1580,7 +1617,6 @@ address   name
 000003e0  TB0EX0                      
 000003ee  TB0IV                       
 000003d0  TB0R                        
-00004440  TimerA0_ISR                 
 000005d0  UCA0ABCTL                   
 000005c6  UCA0BRW                     
 000005c7  UCA0BRW_H                   
@@ -1746,15 +1782,15 @@ address   name
 000000a0  __STACK_SIZE                
 UNDEFED   __TI_BINIT_Base             
 UNDEFED   __TI_BINIT_Limit            
-00004514  __TI_CINIT_Base             
-0000451c  __TI_CINIT_Limit            
-00004504  __TI_Handler_Table_Base     
-0000450c  __TI_Handler_Table_Limit    
+000045de  __TI_CINIT_Base             
+000045ee  __TI_CINIT_Limit            
+000045c4  __TI_Handler_Table_Base     
+000045d0  __TI_Handler_Table_Limit    
 UNDEFED   __TI_INITARRAY_Base         
 UNDEFED   __TI_INITARRAY_Limit        
 0000444a  __TI_ISR_TRAP               
-00010082  __TI_decompress_lzss        
-000102d0  __TI_decompress_none        
+0001036e  __TI_decompress_lzss        
+0001070c  __TI_decompress_none        
 0000ffc6  __TI_int27                  
 0000ffc8  __TI_int28                  
 0000ffca  __TI_int29                  
@@ -1786,36 +1822,63 @@ UNDEFED   __TI_INITARRAY_Limit
 ffffffff  __TI_pprof_out_hndl         
 ffffffff  __TI_prof_data_size         
 ffffffff  __TI_prof_data_start        
+00010612  __TI_zero_init              
 ffffffff  __c_args__                  
 00000001  __mpu_enable                
-000101d4  __mpu_init                  
-0001028e  __mspabi_mpyi_f5hw          
-00010000  _auto_init_hold_wdt         
+00010572  __mpu_init                  
+0001014c  __mspabi_divf               
+00010448  __mspabi_fixfu              
+00010636  __mspabi_fltuf              
+00010000  __mspabi_mpyf               
+000106b4  __mspabi_mpyi_f5hw          
+000102ec  _auto_init_hold_wdt         
 00004422  _c_int00_noargs_noexit_mpu  
 0000fffe  _reset_vector               
 00002360  _stack                      
-0001031e  _system_post_cinit          
-0001031a  _system_pre_init            
-00010314  abort                       
-00010228  config_ACLK_to_32KHz_crystal
-000100f8  copy_in                     
+000107a0  _system_post_cinit          
+0001079c  _system_pre_init            
+00010772  abort                       
+00010750  cls                         
+000105c6  config_ACLK_to_32KHz_crystal
+00010540  config_upmode               
+000103e4  copy_in                     
+000106cc  flashLed                    
+000101dc  forfeit_runway_1            
+00010264  forfeit_runway_2            
 00004400  fram_ipe_end                
 00004400  fram_ipe_start              
 00004400  fram_rw_start               
 00004400  fram_rx_start               
-000102a6  init_leds                   
-0001024e  init_switches               
-0001019e  main                        
-000102bc  memcpy                      
+00001c0e  green_led_blinking          
+0001075a  green_off                   
+00010762  green_on                    
+0001076a  green_toggle                
+000106e2  init_leds                   
+000105ec  init_switches               
+000104d0  interact_runway_1           
+00010508  interact_runway_2           
+000100b8  main                        
+000106f8  memcpy                      
 0000a501  mpu_ctl0_value              
 00001513  mpu_sam_value               
 00000440  mpu_segment_border1         
 00000440  mpu_segment_border2         
-0001015c  print_runway_template       
-000102e2  uart_newline                
-000102f4  uart_read_char              
-00010306  uart_write_char             
-00010274  uart_write_string           
+0001048e  print_runway_template       
+00001c10  red_led_blinking            
+00010778  red_off                     
+0001077e  red_on                      
+00010784  red_toggle                  
+0001065a  request_runway_1            
+0001067a  request_runway_2            
+00001c12  runway_1                    
+00001c0c  runway_2                    
+0001078a  s1_callback                 
+00010790  s2_callback                 
+00010796  timer_callback              
+0001071e  uart_newline                
+00010730  uart_read_char              
+00010742  uart_write_char             
+0001069a  uart_write_string           
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -3221,6 +3284,10 @@ address   name
 00000e7e  ESIRAM126                   
 00000e7f  ESIRAM127                   
 00001513  mpu_sam_value               
+00001c0c  runway_2                    
+00001c0e  green_led_blinking          
+00001c10  red_led_blinking            
+00001c12  runway_1                    
 00002360  _stack                      
 00002400  __STACK_END                 
 00004400  Port1_ISR                   
@@ -3229,12 +3296,12 @@ address   name
 00004400  fram_rw_start               
 00004400  fram_rx_start               
 00004422  _c_int00_noargs_noexit_mpu  
-00004440  TimerA0_ISR                 
+00004440  T0A0_ISR                    
 0000444a  __TI_ISR_TRAP               
-00004504  __TI_Handler_Table_Base     
-0000450c  __TI_Handler_Table_Limit    
-00004514  __TI_CINIT_Base             
-0000451c  __TI_CINIT_Limit            
+000045c4  __TI_Handler_Table_Base     
+000045d0  __TI_Handler_Table_Limit    
+000045de  __TI_CINIT_Base             
+000045ee  __TI_CINIT_Limit            
 0000a501  mpu_ctl0_value              
 0000ffc6  __TI_int27                  
 0000ffc8  __TI_int28                  
@@ -3265,27 +3332,50 @@ address   name
 0000fffa  __TI_int53                  
 0000fffc  __TI_int54                  
 0000fffe  _reset_vector               
-00010000  _auto_init_hold_wdt         
-00010082  __TI_decompress_lzss        
-000100f8  copy_in                     
-0001015c  print_runway_template       
-0001019e  main                        
-000101d4  __mpu_init                  
-00010200  Initialize_UART2            
-00010228  config_ACLK_to_32KHz_crystal
-0001024e  init_switches               
-00010274  uart_write_string           
-0001028e  __mspabi_mpyi_f5hw          
-000102a6  init_leds                   
-000102bc  memcpy                      
-000102d0  __TI_decompress_none        
-000102e2  uart_newline                
-000102f4  uart_read_char              
-00010306  uart_write_char             
-00010314  C$$EXIT                     
-00010314  abort                       
-0001031a  _system_pre_init            
-0001031e  _system_post_cinit          
+00010000  __mspabi_mpyf               
+000100b8  main                        
+0001014c  __mspabi_divf               
+000101dc  forfeit_runway_1            
+00010264  forfeit_runway_2            
+000102ec  _auto_init_hold_wdt         
+0001036e  __TI_decompress_lzss        
+000103e4  copy_in                     
+00010448  __mspabi_fixfu              
+0001048e  print_runway_template       
+000104d0  interact_runway_1           
+00010508  interact_runway_2           
+00010540  config_upmode               
+00010572  __mpu_init                  
+0001059e  Initialize_UART2            
+000105c6  config_ACLK_to_32KHz_crystal
+000105ec  init_switches               
+00010612  __TI_zero_init              
+00010636  __mspabi_fltuf              
+0001065a  request_runway_1            
+0001067a  request_runway_2            
+0001069a  uart_write_string           
+000106b4  __mspabi_mpyi_f5hw          
+000106cc  flashLed                    
+000106e2  init_leds                   
+000106f8  memcpy                      
+0001070c  __TI_decompress_none        
+0001071e  uart_newline                
+00010730  uart_read_char              
+00010742  uart_write_char             
+00010750  cls                         
+0001075a  green_off                   
+00010762  green_on                    
+0001076a  green_toggle                
+00010772  C$$EXIT                     
+00010772  abort                       
+00010778  red_off                     
+0001077e  red_on                      
+00010784  red_toggle                  
+0001078a  s1_callback                 
+00010790  s2_callback                 
+00010796  timer_callback              
+0001079c  _system_pre_init            
+000107a0  _system_post_cinit          
 ffffffff  __TI_pprof_out_hndl         
 ffffffff  __TI_prof_data_size         
 ffffffff  __TI_prof_data_start        
@@ -3295,4 +3385,4 @@ UNDEFED   __TI_BINIT_Limit
 UNDEFED   __TI_INITARRAY_Base         
 UNDEFED   __TI_INITARRAY_Limit        
 
-[1472 symbols]
+[1499 symbols]

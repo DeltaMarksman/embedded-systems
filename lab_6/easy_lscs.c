@@ -100,29 +100,24 @@ void config_ACLK_to_32KHz_crystal(void) {
 }
 
 
-void config_timer_A_upmode_ms(unsigned int ms) {
-    // Convert ms to ACLK ticks
-    // ticks = ms * 32768 / 1000
-    unsigned int ticks = (unsigned long)ms * 32768UL / 1000UL;
-
-    if (ticks == 0)
-        ticks = 1;   // Minimum valid period
-
-    TA0CCR0 = ticks - 1;        // Set period
+void config_upmode(unsigned int ms) {
     TA0CCTL0 = CCIE;            // Enable interrupt
+    TA0CCTL0 &= ~CCIFG;         // Ensure flag is cleared at the start
 
-    TA0CTL = TASSEL__ACLK |     // Use ACLK
-             MC__UP     |       // Up mode
-             TACLR;             // Clear TAR
+    TA0CTL = TASSEL_1 | ID_0 | MC_1 | TACLR;
+
+    float seconds = ms/1000.0;
+    TA0CCR0 = seconds * 32768;
+
 }
 
 // interupts
-void ta_callback(callback_t cb) {
+void timer_callback(callback_t cb) {
     ta_cb = cb;
 }
 
 #pragma vector = TIMER0_A0_VECTOR
-__interrupt void TimerA0_ISR(void)
+__interrupt void T0A0_ISR(void)
 {
     ta_cb();
 }
