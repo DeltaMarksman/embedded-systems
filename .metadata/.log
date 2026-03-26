@@ -702,3 +702,15 @@ org.jsoup.HttpStatusException: HTTP error fetching URL. Status=421, URL=https://
 
 !ENTRY org.eclipse.cdt.core 1 0 2026-03-26 13:31:06.011
 !MESSAGE Indexed 'lab_7' (1 sources, 5 headers) in 0.239 sec: 1,469 declarations; 2,007 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.core.resources 2 566 2026-03-26 14:24:12.727
+!MESSAGE null parent found while collapsing trees
+
+!ENTRY org.eclipse.core.resources 2 566 2026-03-26 14:30:47.373
+!MESSAGE null parent found while collapsing trees
+
+!ENTRY org.eclipse.core.resources 2 566 2026-03-26 14:38:54.608
+!MESSAGE null parent found while collapsing trees
+
+!ENTRY org.eclipse.core.resources 2 566 2026-03-26 14:55:19.042
+!MESSAGE null parent found while collapsing trees
