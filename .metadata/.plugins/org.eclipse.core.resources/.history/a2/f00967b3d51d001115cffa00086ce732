@@ -1,0 +1,54 @@
+#include <msp430.h> 
+#include <easy_lscs.h>
+
+
+// Variable to keep track of which light should be blinking
+int red_led_blinking = 1;
+int green_led_blinking = 1;
+
+void blink_leds() {
+    if (red_led_blinking)
+        red_toggle();
+    if (green_led_blinking)
+        green_toggle();
+}
+
+void red_led_toggle() {
+    if (red_led_blinking == 0) {
+        red_led_blinking = 1;
+    } else {
+        red_led_blinking = 0;
+    }
+}
+
+void green_led_toggle() {
+    if (green_led_blinking == 0) {
+        green_led_blinking = 1;
+    } else {
+        green_led_blinking = 0;
+        green_off();
+    }
+}
+
+int main(void)
+{
+	WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
+	
+	// Init
+	init_leds();
+	init_switches();
+
+	// Config clk
+	config_ACLK_to_32KHz_crystal();
+	config_upmode(500);
+	timer_callback(blink_leds);
+
+	// Switches
+	s1_callback(red_led_toggle);
+    s2_callback(green_led_toggle);
+
+    _enable_interrupts();
+
+
+	return 0;
+}

@@ -1,7 +1,7 @@
 ******************************************************************************
                   MSP430 Linker PC v16.9.6                     
 ******************************************************************************
->> Linked Thu Mar 12 00:42:14 2026
+>> Linked Thu Mar 12 02:12:05 2026
 
 OUTPUT FILE NAME:   <lab_6.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs_noexit_mpu"  address: 00004422
@@ -79,7 +79,7 @@ MEMORY CONFIGURATION
   INT53                 0000fffa   00000002  00000002  00000000  RWIX
   INT54                 0000fffc   00000002  00000002  00000000  RWIX
   RESET                 0000fffe   00000002  00000002  00000000  RWIX
-  FRAM2                 00010000   00014000  000007a2  0001385e  RWIX
+  FRAM2                 00010000   00014000  000007a4  0001385c  RWIX
 
 
 SECTION ALLOCATION MAP
@@ -248,60 +248,60 @@ SYSNMI     0    0000fffc    00000002
 .reset     0    0000fffe    00000002     
                   0000fffe    00000002     rts430x_lc_rd_eabi.lib : boot.obj (.reset)
 
-.text      0    00010000    000007a2     
+.text      0    00010000    000007a4     
                   00010000    000000b8     rts430x_lc_rd_eabi.lib : fs_mpy.obj (.text)
-                  000100b8    00000094     main.obj (.text:main)
-                  0001014c    00000090     rts430x_lc_rd_eabi.lib : fs_div.obj (.text)
-                  000101dc    00000088     main.obj (.text:forfeit_runway_1)
-                  00010264    00000088     main.obj (.text:forfeit_runway_2)
-                  000102ec    00000082     rts430x_lc_rd_eabi.lib : autoinit_wdt.obj (.text:_auto_init_hold_wdt)
-                  0001036e    00000076                            : copy_decompress_lzss.obj (.text:decompress:lzss:__TI_decompress_lzss)
-                  000103e4    00000064                            : cpy_tbl.obj (.text:copy_in)
-                  00010448    00000046                            : fs_tou.obj (.text)
-                  0001048e    00000042     main.obj (.text:print_runway_template)
-                  000104d0    00000038     main.obj (.text:interact_runway_1)
-                  00010508    00000038     main.obj (.text:interact_runway_2)
-                  00010540    00000032     easy_lscs.obj (.text:config_upmode)
-                  00010572    0000002c     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
-                  0001059e    00000028     main.obj (.text:Initialize_UART2)
-                  000105c6    00000026     easy_lscs.obj (.text:config_ACLK_to_32KHz_crystal)
-                  000105ec    00000026     easy_lscs.obj (.text:init_switches)
-                  00010612    00000024     rts430x_lc_rd_eabi.lib : copy_zero_init.obj (.text:decompress:ZI:__TI_zero_init)
-                  00010636    00000024                            : fs_utof.obj (.text)
-                  0001065a    00000020     main.obj (.text:request_runway_1)
-                  0001067a    00000020     main.obj (.text:request_runway_2)
-                  0001069a    0000001a     main.obj (.text:uart_write_string)
-                  000106b4    00000018     rts430x_lc_rd_eabi.lib : mult16_f5hw.obj (.text)
-                  000106cc    00000016     main.obj (.text:flashLed)
-                  000106e2    00000016     easy_lscs.obj (.text:init_leds)
-                  000106f8    00000014     rts430x_lc_rd_eabi.lib : memcpy.obj (.text:memcpy)
-                  0001070c    00000012                            : copy_decompress_none.obj (.text:decompress:none:__TI_decompress_none)
-                  0001071e    00000012     main.obj (.text:uart_newline)
-                  00010730    00000012     main.obj (.text:uart_read_char)
-                  00010742    0000000e     main.obj (.text:uart_write_char)
-                  00010750    0000000a     main.obj (.text:cls)
-                  0001075a    00000008     easy_lscs.obj (.text:green_off)
-                  00010762    00000008     easy_lscs.obj (.text:green_on)
-                  0001076a    00000008     easy_lscs.obj (.text:green_toggle)
-                  00010772    00000006     rts430x_lc_rd_eabi.lib : exit.obj (.text:abort)
-                  00010778    00000006     easy_lscs.obj (.text:red_off)
-                  0001077e    00000006     easy_lscs.obj (.text:red_on)
-                  00010784    00000006     easy_lscs.obj (.text:red_toggle)
-                  0001078a    00000006     easy_lscs.obj (.text:s1_callback)
-                  00010790    00000006     easy_lscs.obj (.text:s2_callback)
-                  00010796    00000006     easy_lscs.obj (.text:timer_callback)
-                  0001079c    00000004     rts430x_lc_rd_eabi.lib : pre_init.obj (.text:_system_pre_init)
-                  000107a0    00000002                            : startup.obj (.text:_system_post_cinit)
+                  000100b8    00000090                            : fs_div.obj (.text)
+                  00010148    0000008e     main.obj (.text:main)
+                  000101d6    00000088     main.obj (.text:forfeit_runway_1)
+                  0001025e    00000088     main.obj (.text:forfeit_runway_2)
+                  000102e6    00000082     rts430x_lc_rd_eabi.lib : autoinit_wdt.obj (.text:_auto_init_hold_wdt)
+                  00010368    00000076                            : copy_decompress_lzss.obj (.text:decompress:lzss:__TI_decompress_lzss)
+                  000103de    00000064                            : cpy_tbl.obj (.text:copy_in)
+                  00010442    00000046                            : fs_tou.obj (.text)
+                  00010488    00000042     main.obj (.text:print_runway_template)
+                  000104ca    00000038     main.obj (.text:interact_runway_1)
+                  00010502    00000038     main.obj (.text:interact_runway_2)
+                  0001053a    00000032     easy_lscs.obj (.text:config_upmode)
+                  0001056c    0000002c     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
+                  00010598    00000028     main.obj (.text:Initialize_UART2)
+                  000105c0    00000026     easy_lscs.obj (.text:config_ACLK_to_32KHz_crystal)
+                  000105e6    00000026     easy_lscs.obj (.text:init_switches)
+                  0001060c    00000024     rts430x_lc_rd_eabi.lib : copy_zero_init.obj (.text:decompress:ZI:__TI_zero_init)
+                  00010630    00000024                            : fs_utof.obj (.text)
+                  00010654    00000020     main.obj (.text:request_runway_1)
+                  00010674    00000020     main.obj (.text:request_runway_2)
+                  00010694    0000001a     main.obj (.text:uart_write_string)
+                  000106ae    00000018     rts430x_lc_rd_eabi.lib : mult16_f5hw.obj (.text)
+                  000106c6    00000016     main.obj (.text:flashLed)
+                  000106dc    00000016     easy_lscs.obj (.text:init_leds)
+                  000106f2    00000014     rts430x_lc_rd_eabi.lib : memcpy.obj (.text:memcpy)
+                  00010706    00000012                            : copy_decompress_none.obj (.text:decompress:none:__TI_decompress_none)
+                  00010718    00000012     main.obj (.text:uart_newline)
+                  0001072a    00000012     main.obj (.text:uart_read_char)
+                  0001073c    0000000e     easy_lscs.obj (.text:timer_callback)
+                  0001074a    0000000e     main.obj (.text:uart_write_char)
+                  00010758    0000000a     main.obj (.text:cls)
+                  00010762    00000008     easy_lscs.obj (.text:green_off)
+                  0001076a    00000008     easy_lscs.obj (.text:green_on)
+                  00010772    00000008     easy_lscs.obj (.text:green_toggle)
+                  0001077a    00000006     rts430x_lc_rd_eabi.lib : exit.obj (.text:abort)
+                  00010780    00000006     easy_lscs.obj (.text:red_off)
+                  00010786    00000006     easy_lscs.obj (.text:red_on)
+                  0001078c    00000006     easy_lscs.obj (.text:red_toggle)
+                  00010792    00000006     easy_lscs.obj (.text:s1_callback)
+                  00010798    00000006     easy_lscs.obj (.text:s2_callback)
+                  0001079e    00000004     rts430x_lc_rd_eabi.lib : pre_init.obj (.text:_system_pre_init)
+                  000107a2    00000002                            : startup.obj (.text:_system_post_cinit)
 
 MODULE SUMMARY
 
        Module                     code   ro data   rw data
        ------                     ----   -------   -------
     .\
-       main.obj                   810    370       8      
-       easy_lscs.obj              252    4         12     
+       main.obj                   804    370       8      
+       easy_lscs.obj              260    4         12     
     +--+--------------------------+------+---------+---------+
-       Total:                     1062   374       20     
+       Total:                     1064   374       20     
                                                           
     C:\ti\ccsv7\ccs_base\msp430\lib\FR59xx\MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib
        mpu_init.o                 44     0         0      
@@ -358,7 +358,7 @@ MODULE SUMMARY
        Stack:                     0      0         160    
        Linker Generated:          0      41        0      
     +--+--------------------------+------+---------+---------+
-       Grand Total:               2036   469       180    
+       Grand Total:               2038   469       180    
 
 
 LINKER GENERATED COPY TABLES
@@ -637,7 +637,7 @@ address   name
 000009ce  AESAXIN_L                   
 000004be  BCD2BIN                     
 000004bc  BIN2BCD                     
-00010772  C$$EXIT                     
+0001077a  C$$EXIT                     
 0000043e  CAPTIO0CTL                  
 0000043f  CAPTIO0CTL_H                
 0000043e  CAPTIO0CTL_L                
@@ -1129,7 +1129,7 @@ address   name
 00000146  GCCTL1                      
 00000147  GCCTL1_H                    
 00000146  GCCTL1_L                    
-0001059e  Initialize_UART2            
+00010598  Initialize_UART2            
 00000a40  LCDBM1                      
 00000a49  LCDBM10                     
 00000a4a  LCDBM11                     
@@ -1789,8 +1789,8 @@ UNDEFED   __TI_BINIT_Limit
 UNDEFED   __TI_INITARRAY_Base         
 UNDEFED   __TI_INITARRAY_Limit        
 0000444a  __TI_ISR_TRAP               
-0001036e  __TI_decompress_lzss        
-0001070c  __TI_decompress_none        
+00010368  __TI_decompress_lzss        
+00010706  __TI_decompress_none        
 0000ffc6  __TI_int27                  
 0000ffc8  __TI_int28                  
 0000ffca  __TI_int29                  
@@ -1822,63 +1822,63 @@ UNDEFED   __TI_INITARRAY_Limit
 ffffffff  __TI_pprof_out_hndl         
 ffffffff  __TI_prof_data_size         
 ffffffff  __TI_prof_data_start        
-00010612  __TI_zero_init              
+0001060c  __TI_zero_init              
 ffffffff  __c_args__                  
 00000001  __mpu_enable                
-00010572  __mpu_init                  
-0001014c  __mspabi_divf               
-00010448  __mspabi_fixfu              
-00010636  __mspabi_fltuf              
+0001056c  __mpu_init                  
+000100b8  __mspabi_divf               
+00010442  __mspabi_fixfu              
+00010630  __mspabi_fltuf              
 00010000  __mspabi_mpyf               
-000106b4  __mspabi_mpyi_f5hw          
-000102ec  _auto_init_hold_wdt         
+000106ae  __mspabi_mpyi_f5hw          
+000102e6  _auto_init_hold_wdt         
 00004422  _c_int00_noargs_noexit_mpu  
 0000fffe  _reset_vector               
 00002360  _stack                      
-000107a0  _system_post_cinit          
-0001079c  _system_pre_init            
-00010772  abort                       
-00010750  cls                         
-000105c6  config_ACLK_to_32KHz_crystal
-00010540  config_upmode               
-000103e4  copy_in                     
-000106cc  flashLed                    
-000101dc  forfeit_runway_1            
-00010264  forfeit_runway_2            
+000107a2  _system_post_cinit          
+0001079e  _system_pre_init            
+0001077a  abort                       
+00010758  cls                         
+000105c0  config_ACLK_to_32KHz_crystal
+0001053a  config_upmode               
+000103de  copy_in                     
+000106c6  flashLed                    
+000101d6  forfeit_runway_1            
+0001025e  forfeit_runway_2            
 00004400  fram_ipe_end                
 00004400  fram_ipe_start              
 00004400  fram_rw_start               
 00004400  fram_rx_start               
 00001c0e  green_led_blinking          
-0001075a  green_off                   
-00010762  green_on                    
-0001076a  green_toggle                
-000106e2  init_leds                   
-000105ec  init_switches               
-000104d0  interact_runway_1           
-00010508  interact_runway_2           
-000100b8  main                        
-000106f8  memcpy                      
+00010762  green_off                   
+0001076a  green_on                    
+00010772  green_toggle                
+000106dc  init_leds                   
+000105e6  init_switches               
+000104ca  interact_runway_1           
+00010502  interact_runway_2           
+00010148  main                        
+000106f2  memcpy                      
 0000a501  mpu_ctl0_value              
 00001513  mpu_sam_value               
 00000440  mpu_segment_border1         
 00000440  mpu_segment_border2         
-0001048e  print_runway_template       
+00010488  print_runway_template       
 00001c10  red_led_blinking            
-00010778  red_off                     
-0001077e  red_on                      
-00010784  red_toggle                  
-0001065a  request_runway_1            
-0001067a  request_runway_2            
+00010780  red_off                     
+00010786  red_on                      
+0001078c  red_toggle                  
+00010654  request_runway_1            
+00010674  request_runway_2            
 00001c12  runway_1                    
 00001c0c  runway_2                    
-0001078a  s1_callback                 
-00010790  s2_callback                 
-00010796  timer_callback              
-0001071e  uart_newline                
-00010730  uart_read_char              
-00010742  uart_write_char             
-0001069a  uart_write_string           
+00010792  s1_callback                 
+00010798  s2_callback                 
+0001073c  timer_callback              
+00010718  uart_newline                
+0001072a  uart_read_char              
+0001074a  uart_write_char             
+00010694  uart_write_string           
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -3333,49 +3333,49 @@ address   name
 0000fffc  __TI_int54                  
 0000fffe  _reset_vector               
 00010000  __mspabi_mpyf               
-000100b8  main                        
-0001014c  __mspabi_divf               
-000101dc  forfeit_runway_1            
-00010264  forfeit_runway_2            
-000102ec  _auto_init_hold_wdt         
-0001036e  __TI_decompress_lzss        
-000103e4  copy_in                     
-00010448  __mspabi_fixfu              
-0001048e  print_runway_template       
-000104d0  interact_runway_1           
-00010508  interact_runway_2           
-00010540  config_upmode               
-00010572  __mpu_init                  
-0001059e  Initialize_UART2            
-000105c6  config_ACLK_to_32KHz_crystal
-000105ec  init_switches               
-00010612  __TI_zero_init              
-00010636  __mspabi_fltuf              
-0001065a  request_runway_1            
-0001067a  request_runway_2            
-0001069a  uart_write_string           
-000106b4  __mspabi_mpyi_f5hw          
-000106cc  flashLed                    
-000106e2  init_leds                   
-000106f8  memcpy                      
-0001070c  __TI_decompress_none        
-0001071e  uart_newline                
-00010730  uart_read_char              
-00010742  uart_write_char             
-00010750  cls                         
-0001075a  green_off                   
-00010762  green_on                    
-0001076a  green_toggle                
-00010772  C$$EXIT                     
-00010772  abort                       
-00010778  red_off                     
-0001077e  red_on                      
-00010784  red_toggle                  
-0001078a  s1_callback                 
-00010790  s2_callback                 
-00010796  timer_callback              
-0001079c  _system_pre_init            
-000107a0  _system_post_cinit          
+000100b8  __mspabi_divf               
+00010148  main                        
+000101d6  forfeit_runway_1            
+0001025e  forfeit_runway_2            
+000102e6  _auto_init_hold_wdt         
+00010368  __TI_decompress_lzss        
+000103de  copy_in                     
+00010442  __mspabi_fixfu              
+00010488  print_runway_template       
+000104ca  interact_runway_1           
+00010502  interact_runway_2           
+0001053a  config_upmode               
+0001056c  __mpu_init                  
+00010598  Initialize_UART2            
+000105c0  config_ACLK_to_32KHz_crystal
+000105e6  init_switches               
+0001060c  __TI_zero_init              
+00010630  __mspabi_fltuf              
+00010654  request_runway_1            
+00010674  request_runway_2            
+00010694  uart_write_string           
+000106ae  __mspabi_mpyi_f5hw          
+000106c6  flashLed                    
+000106dc  init_leds                   
+000106f2  memcpy                      
+00010706  __TI_decompress_none        
+00010718  uart_newline                
+0001072a  uart_read_char              
+0001073c  timer_callback              
+0001074a  uart_write_char             
+00010758  cls                         
+00010762  green_off                   
+0001076a  green_on                    
+00010772  green_toggle                
+0001077a  C$$EXIT                     
+0001077a  abort                       
+00010780  red_off                     
+00010786  red_on                      
+0001078c  red_toggle                  
+00010792  s1_callback                 
+00010798  s2_callback                 
+0001079e  _system_pre_init            
+000107a2  _system_post_cinit          
 ffffffff  __TI_pprof_out_hndl         
 ffffffff  __TI_prof_data_size         
 ffffffff  __TI_prof_data_start        

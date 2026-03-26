@@ -324,7 +324,6 @@ int main(void)
     timer_callback(flashLed);
     s1_callback(interact_runway_1);
     s2_callback(interact_runway_2);
-    _enable_interrupts();
 
 
     cls();

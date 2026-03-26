@@ -7,6 +7,7 @@
 #include "easy_lscs.h"
 
 
+
 //interrupts code
 static callback_t ta_cb = 0;
 static callback_t s1_cb = 0;
@@ -62,18 +63,27 @@ void s2_callback(callback_t cb) {
     s2_cb = cb;
 }
 
+int s1_pressed() {
+    return (P1IN & S1_BUTTON) == 0;
+}
+
+int s2_pressed() {
+    return (P1IN & S2_BUTTON) == 0;
+}
 
 #pragma vector = PORT1_VECTOR
 __interrupt void Port1_ISR(void)
 {
     if (P1IFG & S1_BUTTON) {
         P1IFG &= ~S1_BUTTON;
-        s1_cb();
+        if (s1_cb)
+            s1_cb();
     }
 
     if (P1IFG & S2_BUTTON) {
         P1IFG &= ~S2_BUTTON;
-        s2_cb();
+        if (s2_cb)
+            s2_cb();
     }
 }
 
@@ -119,7 +129,8 @@ void timer_callback(callback_t cb) {
 #pragma vector = TIMER0_A0_VECTOR
 __interrupt void T0A0_ISR(void)
 {
-    ta_cb();
+    if (ta_cb)
+        ta_cb();
 }
 
 

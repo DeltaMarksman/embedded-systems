@@ -1,0 +1,46 @@
+#include <msp430.h> 
+#include <easy_lscs.h>
+
+
+// Variable to keep track of which light should be blinking
+int red_led_blinking, green_led_blinking = 0;
+
+void blink_leds() {
+    if (red_led_blinking) red_toggle();
+    if (green_led_blinking) green_toggle();
+}
+
+void red_led_toggle() {
+    red_off();
+    red_led_blinking = !red_led_blinking;
+}
+
+void green_led_toggle() {
+    green_off();
+    green_led_blinking = !green_led_blinking;
+}
+
+int main(void)
+{
+	WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
+	PM5CTL0 &= ~LOCKLPM5;       // enable gpio
+	
+	// Init
+	init_leds();
+	init_switches();
+
+	// Config clk
+	config_ACLK_to_32KHz_crystal();
+	config_upmode(500);
+	timer_callback(blink_leds);
+
+	// Switches
+	s1_callback(red_led_toggle);
+    s2_callback(green_led_toggle);
+
+    // dont forget this !!!
+    _enable_interrupts();
+
+
+	return 0;
+}
