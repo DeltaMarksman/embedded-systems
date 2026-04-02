@@ -51,8 +51,6 @@ void uart_write_uint16(unsigned int n) {
         n %= divisor;
         divisor /= 10;
     }
-
-    uart_newline();
 }
 
 void uart_write_string(char *str) {
@@ -61,7 +59,7 @@ void uart_write_string(char *str) {
         str++;
     }
 
-    uart_newline();
+    //uart_newline();
 }
 
 void uart_write_charln(unsigned char ch) {
@@ -80,6 +78,34 @@ unsigned char uart_read_char(void){
     // Otherwise, copy the received byte (this clears the flag) and return it
     temp = RXBUFFER;
     return temp;
+}
+
+
+char* uart_read_string()
+{
+    unsigned int i = 0;
+    static char buffer[32];
+
+    while (i < 32) {
+        unsigned char c = uart_read_char();
+
+        // no byte received yet
+        if (c == 0) {
+            continue;
+        }
+
+        // end of line
+        if (c == '\n' || c == '\r') {
+            break;
+        }
+
+        buffer[i++] = c;
+    }
+
+    // null-terminate
+    buffer[i] = '\0';           // null-terminate
+
+    return buffer;
 }
 
 // Configure UART to the popular configuration
@@ -202,25 +228,98 @@ return 0;
 }
 
 
+
+
+
 // Variable to keep track of timer
-int count = 0;
+int seconds     = 0;
+int minutes     = 0;
+int hours       = 12;
+int last_lux    = 0;
+char *feedback  = "";
+int should_print = 0;
 void onTimer() {
     // Reading two bytes from register 0x00 on I2C device 0x22
     unsigned int data;
 
 
+
     // Read from register 0x00 to get the result
     // https://www.ti.com/lit/ds/symlink/opt3001.pdf?ts=1775042449037
     i2c_read_word(0x44, 0x00, &data);
+    unsigned int lux = data*1.28;
 
-    // Display data
-    uart_write_string("count ");
-    uart_write_uint16(count);
-    uart_write_string("lux ");
-    uart_write_uint16(data*1.28);
+    // Time logic
+    seconds += 1;
+    minutes += seconds > 59 ? 1 : 0;
+    if (seconds >= 60) { should_print = 1; }
+    hours   += minutes > 59 ? 1 : 0;
+
+    seconds = seconds > 59 ? seconds - 60 : seconds;
+    minutes = minutes > 59 ? minutes - 60 : minutes;
+    hours   = hours   > 12 ? hours - 12 : hours;
+
+    if (!should_print) {
+        return;
+    }
+    should_print = 0;
+
+    // Lux logic
+    if (abs(lux - last_lux) >= 10)
+        feedback = lux > last_lux ? "<high>" : "<low>";
+    else
+        feedback = "";
+
+    last_lux = lux;
+
+
+    // Printing TIME
+    uart_write_char('0' + hours/10);
+    uart_write_char('0' + hours%10);
+    uart_write_char(':');
+    uart_write_char('0' + minutes/10);
+    uart_write_char('0' + minutes%10);
+
+    // Printing lux
+    uart_write_char('\t');
+    uart_write_uint16(lux);
+    uart_write_string("\t lux");
+
+    // Printing feedback
+    uart_write_char('\t');
+    uart_write_string(feedback);
+    uart_newline();
+}
+
+void changeTime() {
+    uart_write_string("Enter the time...(3 or 4 digits then hit Enter)");
     uart_newline();
 
-    count++;
+    // Set time
+    char *input = uart_read_string();
+    int digits = input[3] == '\0' ? 3 : 4;
+
+    if (digits == 3) {
+        hours   = (input[0]-'0');
+        minutes = (input[1]-'0')*10  +  (input[2]-'0');
+    } else {
+        hours   = (input[0]-'0')*10  +  (input[1]-'0');
+        minutes = (input[2]-'0')*10  +  (input[3]-'0');
+    }
+
+
+    uart_write_string("Time is set to ");
+    // Printing TIME
+    uart_write_char('0' + hours/10);
+    uart_write_char('0' + hours%10);
+    uart_write_char(':');
+    uart_write_char('0' + minutes/10);
+    uart_write_char('0' + minutes%10);
+
+    uart_newline();
+    uart_newline();
+    should_print = 1;
+    onTimer();
 }
 
 /**
@@ -228,20 +327,30 @@ void onTimer() {
  */
 int main(void)
 {
-	WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
+WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
     PM5CTL0 &= ~LOCKLPM5;
-	
-	config_ACLK_to_32KHz_crystal();
-	Initialize_I2C();
-	Initialize_UART();
-	config_upmode(1000);
 
-	// Init LIGHT SENSOR
-	i2c_write_word(0x44, 0x01, RN_7 | M_3 | ME); // Omit CT because CT is 0
+    config_ACLK_to_32KHz_crystal();
+    Initialize_I2C();
+    Initialize_UART();
+    config_upmode(1000);
+    init_switches();
 
+    // Init LIGHT SENSOR
+    i2c_write_word(0x44, 0x01, RN_7 | M_3 | ME); // Omit CT because CT is 0
 
-	timer_callback(onTimer);
-	_enable_interrupts();
+    // Terminal
+    uart_write_string("*** Lux Logger ***");
+    uart_newline();
+    should_print = 1;
+    onTimer();
 
-	return 0;
+    // Called per second
+    timer_callback(onTimer);
+    _enable_interrupts();
+
+    // on button press
+    s2_callback(changeTime);
+
+    return 0;
 }
