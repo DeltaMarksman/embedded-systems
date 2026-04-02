@@ -9,6 +9,13 @@
 #define true 1
 #define false 0
 
+// lab 7 specific defines
+#define RN_7    0x7000
+#define CT      BITB
+#define M_3     0x0600
+#define ME      BIT2
+
+
 
 
 void uart_write_char(unsigned char ch){
@@ -194,15 +201,26 @@ while((UCB1STATW & UCBBUSY)!=0) {}
 return 0;
 }
 
+
+// Variable to keep track of timer
+int count = 0;
 void onTimer() {
-    // Reading two bytes from register 0x50 on I2C device 0x22
+    // Reading two bytes from register 0x00 on I2C device 0x22
     unsigned int data;
 
-    i2c_read_word(0x44, 0x7E, &data);
-    uart_write_uint16(data); // as per data sheet, it should print 0x5449 or decimal 21577
 
-    i2c_read_word(0x44, 0x7F, &data);
-    uart_write_uint16(data); // as per data sheet, it should print 0x3001 or decimal 12289
+    // Read from register 0x00 to get the result
+    // https://www.ti.com/lit/ds/symlink/opt3001.pdf?ts=1775042449037
+    i2c_read_word(0x44, 0x00, &data);
+
+    // Display data
+    uart_write_string("count ");
+    uart_write_uint16(count);
+    uart_write_string("lux ");
+    uart_write_uint16(data*1.28);
+    uart_newline();
+
+    count++;
 }
 
 /**
@@ -217,6 +235,10 @@ int main(void)
 	Initialize_I2C();
 	Initialize_UART();
 	config_upmode(1000);
+
+	// Init LIGHT SENSOR
+	i2c_write_word(0x44, 0x01, RN_7 | M_3 | ME); // Omit CT because CT is 0
+
 
 	timer_callback(onTimer);
 	_enable_interrupts();
